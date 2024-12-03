@@ -1,67 +1,123 @@
+
 'use client'
 
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
+interface User {
+  name: string;
+  id: number;
+  Username: string;
+  email: string;
+  role: string;
+}
+
 interface AuthContextType {
-  isLoggedIn: boolean
-  login: (username: string, password: string) => Promise<void>
-  logout: () => void
-  error: string | null
+  user: User | null;
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+  login: (username: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>;
+  logout: () => void;
+  error: string | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
-    const authCookie = document.cookie.includes('auth=true')
-    setIsLoggedIn(authCookie)
+    const storedUser = localStorage.getItem('user')
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser)
+      setUser(parsedUser)
+      setIsLoggedIn(true)
+      setIsAdmin(parsedUser.role === 'admin')
+    }
   }, [])
 
   const login = async (Username: string, Password: string) => {
-    setError(null)
-
-    if (!Username || !Password) {
-      setError('Please fill in all fields')
-      return
-    }
-
     try {
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ Username, Password })
+        body: JSON.stringify({ Username, Password }),
       })
 
-      console.log("Response status:", response.status, response.statusText)
-
-      if (response.ok) {
-        setIsLoggedIn(true)
-        document.cookie = 'auth=true; path=/'
-        router.push('/admin')
-      } else {
-        const data = await response.json()
-        console.log("Response data:", data)
-        setError(data.message || 'Invalid credentials')
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Login failed')
       }
+
+      const { user } = await response.json()
+      setUser(user)
+      setIsLoggedIn(true)
+      setIsAdmin(user.role === 'admin')
+      localStorage.setItem('user', JSON.stringify(user))
+      
+      // Set the user cookie with role information
+      document.cookie = `user=${JSON.stringify({ id: user.id, role: user.role })}; path=/; max-age=86400`
+
+      router.push(user.role === 'admin' ? '/admin' : '/')
+    } catch (err) {
+      setError(err.message || 'Login failed. Please check your credentials.')
+    }
+  }
+
+  const register = async (Username: string, email: string, Password: string, ConfirmPassword: string) => {
+    setError(null)
+
+    if (!Username || !email || !Password || !ConfirmPassword) {
+      setError('Please fill in all fields')
+      return
+    }
+
+    if (Password !== ConfirmPassword) {
+      setError('Passwords do not match')
+      return
+    }
+
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ Username, email, Password })
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.message || 'Registration failed')
+      }
+
+      const user = await response.json()
+      setUser(user)
+      setIsLoggedIn(true)
+      setIsAdmin(user.role === 'admin')
+      localStorage.setItem('user', JSON.stringify(user))
+      router.push('/')
     } catch (error: unknown) {
+      console.error('Registration error:', error)
       const errorMessage = (error instanceof Error) ? error.message : 'An error occurred. Please try again.'
       setError(errorMessage)
     }
   }
 
   const logout = () => {
-    document.cookie = 'auth=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    setUser(null)
     setIsLoggedIn(false)
-    router.push('/admin/login')
+    setIsAdmin(false)
+    localStorage.removeItem('user')
+    document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    router.push('/')
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, error }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, login, register, logout, error }}>
       {children}
     </AuthContext.Provider>
   )

@@ -47,12 +47,16 @@ export default async function handler(req, res) {
         );
       }
 
+      
+
       await db.query('DELETE FROM "ProductSizes" WHERE product_id = $1', [id]);
       for (const size of sizes) {
-        await db.query(
-          'INSERT INTO "ProductSizes" (product_id, size, stock) VALUES ($1, $2, $3)',
-          [id, size.size, size.stock]
-        );
+        await db.query(`
+          INSERT INTO "ProductSizes" (product_id, size, stock)
+          VALUES ($1, $2, $3)
+          ON CONFLICT (product_id, size)
+          DO UPDATE SET stock = EXCLUDED.stock
+        `, [id, size.size, size.stock]);
       }
 
       await db.query('COMMIT');

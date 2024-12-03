@@ -1,12 +1,16 @@
+
+
 'use client';
 
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import { useAuth } from './AuthContext';
 
 interface CartItem {
   id: number;
   name: string;
   price: number;
   quantity: number;
+  size?: string;
 }
 
 interface CartContextType {
@@ -22,17 +26,26 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const { user } = useAuth();
 
   useEffect(() => {
-    const storedCart = localStorage.getItem('cart');
-    if (storedCart) {
-      setItems(JSON.parse(storedCart));
+    if (user) {
+      const storedCart = localStorage.getItem(`cart_${user.id}`);
+      if (storedCart) {
+        setItems(JSON.parse(storedCart));
+      } else {
+        setItems([]);
+      }
+    } else {
+      setItems([]);
     }
-  }, []);
+  }, [user]);
 
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(items));
-  }, [items]);
+    if (user) {
+      localStorage.setItem(`cart_${user.id}`, JSON.stringify(items));
+    }
+  }, [items, user]);
 
   const addItem = (item: CartItem) => {
     setItems(currentItems => {

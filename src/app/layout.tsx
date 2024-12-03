@@ -25,6 +25,7 @@ export default function RootLayout({
     <AuthProvider>
     <html lang="en">
       <body className={inter.className}>
+      <AuthProvider>
       <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -33,9 +34,10 @@ export default function RootLayout({
           >
         <CartProvider>                
           {children}
-          {!isHomePage && !isAdminPage && <ShoppingCard />}
+          {/* {!isHomePage && !isAdminPage && <ShoppingCard />} */}
         </CartProvider>
         </ThemeProvider>
+      </AuthProvider>
       </body>
     </html>
     </AuthProvider>

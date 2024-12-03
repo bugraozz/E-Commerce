@@ -84,9 +84,9 @@ export function ProductCard({ product }: { product: Product }) {
         </CardContent>
         <CardFooter className="p-4 flex justify-between items-center">
           <p className="font-bold">{formatPrice(product.price)} TL</p>
-          <Button onClick={handleAddToCart} disabled={availableSizes.length === 0}>
+          {/* <Button onClick={handleAddToCart} disabled={availableSizes.length === 0}>
             {availableSizes.length > 0 ? 'Sepete Ekle' : 'Stokta Yok'}
-          </Button>
+          </Button> */}
         </CardFooter>
       </Card>
     </Link>
