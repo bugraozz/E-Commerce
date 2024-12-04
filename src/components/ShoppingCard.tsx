@@ -97,7 +97,7 @@ export const ShoppingCard = () => {
               </div>
             ))}
             <div className="mt-4">
-              <span className="font-semibold bg-blend-color-burn  ">Toplam:</span>
+              <span className="font-semibold bg-blend-color-burn  ">Toplam::</span>
               <span className="float-center">{items.reduce((acc, item) => acc + item.price * item.quantity, 0)}TL</span>
               <Button className="w-full">Sepete Git</Button>
             </div>
