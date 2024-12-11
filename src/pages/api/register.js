@@ -11,21 +11,18 @@ export default async function handler(req, res) {
     }
 
     try {
-      // Check if user already exists
       const existingUser = await db.query('SELECT * FROM "Users" WHERE "Username" = $1 OR email = $2', [Username, email])
 
       if (existingUser.rows.length > 0) {
         return res.status(400).json({ message: 'Username or email already exists' })
       }
 
-      // Hash the password
       const saltRounds = 10
       const hashedPassword = await bcrypt.hash(Password, saltRounds)
 
-      // Insert the new user
       const result = await db.query(
-        'INSERT INTO "Users" ("Username", email, "Password") VALUES ($1, $2, $3) RETURNING id, "Username", email',
-        [Username, email, hashedPassword]
+        'INSERT INTO "Users" ("Username", email, "Password", role) VALUES ($1, $2, $3, $4) RETURNING id, "Username", email, role',
+        [Username, email, hashedPassword, 'user'] 
       )
 
       res.status(201).json(result.rows[0])

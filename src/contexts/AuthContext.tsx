@@ -1,28 +1,35 @@
-
 'use client'
 
 import React, { createContext, useState, useContext, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface User {
-  name: string;
-  id: number;
-  Username: string;
-  email: string;
-  role: string;
+  id: number
+  username: string
+  token: string
+  role: string
 }
 
 interface AuthContextType {
-  user: User | null;
-  isLoggedIn: boolean;
-  isAdmin: boolean;
-  login: (username: string, password: string) => Promise<void>;
-  register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>;
-  logout: () => void;
-  error: string | null;
+  user: User | null
+  isLoggedIn: boolean
+  isAdmin: boolean
+  login: (username: string, password: string) => Promise<void>
+  logout: () => void
+  register: (username: string, email: string, password: string, confirmPassword: string) => Promise<void>
+  error: string | null
+  getToken: () => string | null
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
+
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
+}
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
@@ -38,11 +45,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(parsedUser)
       setIsLoggedIn(true)
       setIsAdmin(parsedUser.role === 'admin')
+      console.log('User loaded from localStorage:', parsedUser)
     }
   }, [])
 
   const login = async (Username: string, Password: string) => {
     try {
+      console.log('Login called with:', { Username, Password })
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,20 +60,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (!response.ok) {
         const errorData = await response.json()
+        console.log('Login failed:', errorData)
         throw new Error(errorData.message || 'Login failed')
       }
 
       const { user } = await response.json()
+      console.log('User logged in:', user)
       setUser(user)
       setIsLoggedIn(true)
       setIsAdmin(user.role === 'admin')
       localStorage.setItem('user', JSON.stringify(user))
       
       // Set the user cookie with role information
-      document.cookie = `user=${JSON.stringify({ id: user.id, role: user.role })}; path=/; max-age=86400`
+      document.cookie = `user=${JSON.stringify({ id: user.id, role: user.role, token: user.token })}; path=/; max-age=86400`
 
       router.push(user.role === 'admin' ? '/admin' : '/')
     } catch (err) {
+      console.log('Login error:', err)
       setError(err.message || 'Login failed. Please check your credentials.')
     }
   }
@@ -112,21 +124,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoggedIn(false)
     setIsAdmin(false)
     localStorage.removeItem('user')
-    document.cookie = 'user=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
+    console.log('User logged out')
     router.push('/')
   }
 
+  const getToken = () => {
+    return user?.token || null
+  }
+
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, login, register, logout, error }}>
+    <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, login, logout, register, error, getToken }}>
       {children}
     </AuthContext.Provider>
   )
 }
 
-export const useAuth = () => {
-  const context = useContext(AuthContext)
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
-  }
-  return context
-}
+

@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 import {
     Table,
     TableBody,
@@ -25,10 +26,14 @@ interface User {
     id: string;
     Username: string;
     email: string;
+    adress: string;
+    phone: string;
+    gender: string;
     role: string;
 }
 
 export default function AdminUsersPage() {
+    const { getToken } = useAuth();
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -49,31 +54,37 @@ export default function AdminUsersPage() {
         }
     };
 
-    // Role güncellemeyi işleyen fonksiyon
     const editUserRoles = async (id: string, role: string) => {
         try {
-            const response = await fetch(`/api/users`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ id, role }), // id ve role gönderiliyor
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.message || 'API hatası');
-            }
-
-            const updatedUser = await response.json();
-            // Yeni role'ü state'e yansıt
-            setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user.id === updatedUser.id ? { ...user, role: updatedUser.role } : user
-                )
-            );
+          const token = getToken();
+          if (!token) {
+            throw new Error('No authorization token available');
+          }
+    
+          const response = await fetch(`/api/users`, {
+            method: 'PUT',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ id, role }), 
+          });
+    
+          if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'API hatası');
+          }
+    
+          const updatedUser = await response.json();
+          setUsers((prevUsers) =>
+            prevUsers.map((user) =>
+              user.id === updatedUser.id ? { ...user, role: updatedUser.role } : user
+            )
+          );
         } catch (error) {
-            console.error('Hata:', error instanceof Error ? error.message : error);
+          console.error('Hata:', error instanceof Error ? error.message : error);
         }
-    };
+      };
 
     useEffect(() => {
         fetchUsers();
@@ -93,6 +104,9 @@ export default function AdminUsersPage() {
                             <TableRow>
                                 <TableHead>Username</TableHead>
                                 <TableHead >Email</TableHead>
+                                <TableHead >Adress</TableHead>
+                                <TableHead >Phone</TableHead>
+                                <TableHead >Gender</TableHead>
                                 <TableHead >Role</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -101,6 +115,9 @@ export default function AdminUsersPage() {
                                 <TableRow key={user.id}>
                                     <TableCell >{user.Username}</TableCell>
                                     <TableCell >{user.email}</TableCell>
+                                    <TableCell >{user.adress}</TableCell>
+                                    <TableCell >{user.phone}</TableCell>
+                                    <TableCell >{user.gender}</TableCell>                                   
                                     <TableCell >
                                         <Select
                                             value={user.role} 
@@ -124,3 +141,7 @@ export default function AdminUsersPage() {
         </div>
     );
 }
+
+
+
+

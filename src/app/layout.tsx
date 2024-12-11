@@ -7,9 +7,10 @@ import { ShoppingCard } from '@/components/ShoppingCard'
 import { usePathname } from 'next/navigation'
 import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from "@/components/theme-provider"
+import { FavoritesProvider } from '@/contexts/FavoritesContext';
+import { SessionProvider } from 'next-auth/react';
 
 const inter = Inter({ subsets: ['latin'] })
-
 
 export default function RootLayout({
   children,
@@ -22,24 +23,26 @@ export default function RootLayout({
     const isAdminPage = pathname ? pathname.startsWith('/admin') : true
 
   return (
-    <AuthProvider>
-    <html lang="en">
-      <body className={inter.className}>
+    <SessionProvider>
       <AuthProvider>
-      <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-        <CartProvider>                
-          {children}
-          {/* {!isHomePage && !isAdminPage && <ShoppingCard />} */}
-        </CartProvider>
-        </ThemeProvider>
+        <html lang="en">
+          <body className={inter.className}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <CartProvider>     
+                <FavoritesProvider>
+                  {children}
+                  {/* {!isHomePage && !isAdminPage && <ShoppingCard />} */}
+                </FavoritesProvider>
+              </CartProvider>
+            </ThemeProvider>
+          </body>
+        </html>
       </AuthProvider>
-      </body>
-    </html>
-    </AuthProvider>
+    </SessionProvider>
   )
 }

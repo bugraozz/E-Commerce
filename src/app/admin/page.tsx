@@ -42,6 +42,16 @@ export default function AdminPage() {
             </CardContent>
           </Card>    
         </Link>
+        <Link href="/admin/content-pages">
+          <Card>
+            <CardHeader>
+              <CardTitle>Sayfalar</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>Sayfaları düzenle</p>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
       <Button onClick={logout} className="mt-4 fixed top-0 right-20 z-50">Logout</Button>
     </div>

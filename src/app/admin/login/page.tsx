@@ -16,6 +16,7 @@ export default function AdminLoginPage() {
     const [email, setEmail] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const { login, register, error } = useAuth()
+    const [phone, setPhone] = useState('')
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,6 +104,17 @@ export default function AdminLoginPage() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
+                <div className="space-y-2">
+                  <label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                    Telefon
+                  </label>
+                  <Input
+                    id="phone"
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="register-password" className="text-sm font-medium text-gray-700">
@@ -115,6 +127,7 @@ export default function AdminLoginPage() {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                   />
+                </div>
                 </div>
                 <div className="space-y-2">
                   <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">
