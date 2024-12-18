@@ -167,7 +167,7 @@ export default function AdminCategoryPage({ params }: { params: { category: stri
       setError(null);
     } catch (error) {
       setError
-('Ürün güncellenirken bir hata oluştu.');
+      ('Ürün güncellenirken bir hata oluştu.');
       setSuccess(null);
     }
   };
@@ -268,286 +268,601 @@ export default function AdminCategoryPage({ params }: { params: { category: stri
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">{gender === 'women' ? 'Kadın' : 'Erkek'} Ürünleri ve Kategorileri Yönetimi</h1>
-
-      {success && <p className="text-green-500 mb-4">{success}</p>}
-
-      <div className="flex gap-4 mb-8">
-        <Button onClick={() => setShowCategoryForm(!showCategoryForm)} variant="default">
-          Kategori Ekle
-        </Button>
-        <Button onClick={() => setShowProductForm(!showProductForm)} variant="default">
-          Ürün Ekle
-        </Button>
-      </div>
-
-      {showCategoryForm && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Yeni Kategori Ekle</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Input
-              type="text"
-              placeholder="Kategori Adı"
-              value={newCategory.name}
-              onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
-              className="mb-4"
-            />
-          </CardContent>
-          <CardFooter>
-            <Button onClick={handleAddCategory}>Kategori Ekle</Button>
-          </CardFooter>
-        </Card>
-      )}
-
-      {showProductForm && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Yeni Ürün Ekle</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Input
-              type="text"
-              placeholder="Ürün Adı"
-              value={newProduct.name}
-              onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-              className="mb-2"
-            />
-            <Input
-              type="number"
-              placeholder="Fiyat"
-              value={newProduct.price}
-              onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
-              className="mb-2"
-            />
-            {newProduct.images.map((image, index) => (
-              <div key={index} className="flex mb-2">
-                <Input
-                  type="text"
-                  placeholder={`Resim URL ${index + 1}`}
-                  value={image}
-                  onChange={(e) => {
-                    const newImages = [...newProduct.images];
-                    newImages[index] = e.target.value;
-                    setNewProduct({ ...newProduct, images: newImages });
-                  }}
-                  className="flex-grow"
-                />
-                <Button 
-                  onClick={() => {
-                    const newImages = newProduct.images.filter((_, i) => i !== index);
-                    setNewProduct({ ...newProduct, images: newImages });
-                  }}
-                  variant="destructive"
-                  className="ml-2"
-                >
-                  Sil
-                </Button>
-              </div>
-            ))}
-            <Button 
-              onClick={() => setNewProduct({ ...newProduct, images: [...newProduct.images, ''] })}
-              variant="outline"
-              className="mb-2"
-            >
-              Resim Ekle
-            </Button>
-            <Textarea
-              placeholder="Ürün Açıklaması"
-              value={newProduct.description}
-              onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-              className="mb-2"
-            />
-            <Select
-              value={newProduct.category}
-              onValueChange={(value) => setNewProduct({ ...newProduct, category: value })}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Kategori Seçin" />
-              </SelectTrigger>
-              <SelectContent>
-                {categories.map((category) => (
-                  <SelectItem key={category.id} value={category.name}>
-                    {category.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="mt-4">
-              <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
-              {newProduct.sizes.map((size, index) => (
-                <div key={index} className="flex gap-2 mb-2">
+    <div className="bg-gray-100 min-h-screen text-gray-900">
+      <div className="container mx-auto px-6 py-8">
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">
+          {gender === 'women' ? 'Kadın' : 'Erkek'} Ürünleri ve Kategorileri Yönetimi
+        </h1>
+  
+        {success && <p className="bg-green-100 text-green-700 p-4 rounded mb-6">{success}</p>}
+  
+        <div className="flex gap-4 mb-8">
+          <Button
+            onClick={() => setShowCategoryForm(!showCategoryForm)}
+            variant="default"
+            className="bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Kategori Ekle
+          </Button>
+          <Button
+            onClick={() => setShowProductForm(!showProductForm)}
+            variant="default"
+            className="bg-blue-500 text-white hover:bg-blue-600"
+          >
+            Ürün Ekle
+          </Button>
+        </div>
+  
+        {showCategoryForm && (
+          <Card className="mb-8 shadow-md">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">Yeni Kategori Ekle</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Input
+                type="text"
+                placeholder="Kategori Adı"
+                value={newCategory.name}
+                onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+                className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+              />
+            </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handleAddCategory}
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
+                Kategori Ekle
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+  
+        {showProductForm && (
+          <Card className="mb-8 shadow-md">
+            <CardHeader>
+              <CardTitle className="text-xl font-semibold">Yeni Ürün Ekle</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Input
+                type="text"
+                placeholder="Ürün Adı"
+                value={newProduct.name}
+                onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+                className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+              />
+              <Input
+                type="number"
+                placeholder="Fiyat"
+                value={newProduct.price}
+                onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
+                className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+              />
+              {newProduct.images.map((image, index) => (
+                <div key={index} className="flex items-center mb-4">
                   <Input
                     type="text"
-                    placeholder="Beden"
-                    value={size.size}
+                    placeholder={`Resim URL ${index + 1}`}
+                    value={image}
                     onChange={(e) => {
-                      const newSizes = [...newProduct.sizes];
-                      newSizes[index].size = e.target.value;
-                      setNewProduct({ ...newProduct, sizes: newSizes });
+                      const newImages = [...newProduct.images];
+                      newImages[index] = e.target.value;
+                      setNewProduct({ ...newProduct, images: newImages });
                     }}
+                    className="flex-grow border-gray-300 focus:ring focus:ring-blue-500"
                   />
-                  <Input
-                    type="number"
-                    placeholder="Stok"
-                    value={size.stock}
-                    onChange={(e) => {
-                      const newSizes = [...newProduct.sizes];
-                      newSizes[index].stock = parseInt(e.target.value);
-                      setNewProduct({ ...newProduct, sizes: newSizes });
-                    }}
-                  />
-                  <Button 
+                  <Button
                     onClick={() => {
-                      const newSizes = newProduct.sizes.filter((_, i) => i !== index);
-                      setNewProduct({ ...newProduct, sizes: newSizes });
+                      const newImages = newProduct.images.filter((_, i) => i !== index);
+                      setNewProduct({ ...newProduct, images: newImages });
                     }}
                     variant="destructive"
+                    className="ml-2 text-red-500 hover:text-red-600"
                   >
                     Sil
                   </Button>
                 </div>
               ))}
-              <Button 
-                onClick={() => setNewProduct({ ...newProduct, sizes: [...newProduct.sizes, { size: '', stock: 0 }] })}
+              <Button
+                onClick={() => setNewProduct({ ...newProduct, images: [...newProduct.images, ''] })}
                 variant="outline"
+                className="mb-4 border border-gray-300 hover:bg-gray-200"
               >
-                Beden Ekle
+                Resim Ekle
               </Button>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button onClick={handleAddProduct}>Ürün Ekle</Button>
-          </CardFooter>
-        </Card>
-      )}
-
-      <div className="mb-4">
-        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger>
-            <SelectValue placeholder="Kategori Seçin" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category.id} value={category.name}>
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {products.length === 0 ? (
-          <p>Bu kategoride ürün bulunmamaktadır.</p>
-        ) : (
-          products.map((product) => (
-            <Card key={product.id}>
-              <CardHeader>
-                <CardTitle>{product.name}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Input
-                  type="text"
-                  value={product.name}
-                  onChange={(e) => handleInputChange(product.id, 'name', e.target.value)}
-                  className="mb-2"
-                />
-                <Input
-                  type="number"
-                  value={product.price}
-                  onChange={(e) => handleInputChange(product.id, 'price', parseFloat(e.target.value))}
-                  className="mb-2"
-                />
-                {product.images.map((image, index) => (
-                  <div key={index} className="flex mb-2">
+              <Textarea
+                placeholder="Ürün Açıklaması"
+                value={newProduct.description}
+                onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+                className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+              />
+              <Select
+                value={newProduct.category}
+                onValueChange={(value) => setNewProduct({ ...newProduct, category: value })}
+                className="mb-4"
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Kategori Seçin" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.name}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <div className="mt-4">
+                <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
+                {newProduct.sizes.map((size, index) => (
+                  <div key={index} className="flex items-center gap-4 mb-4">
                     <Input
                       type="text"
-                      value={image}
-                      onChange={(e) => handleImageChange(product.id, index, e.target.value)}
-                      className="flex-grow"
+                      placeholder="Beden"
+                      value={size.size}
+                      onChange={(e) => {
+                        const newSizes = [...newProduct.sizes];
+                        newSizes[index].size = e.target.value;
+                        setNewProduct({ ...newProduct, sizes: newSizes });
+                      }}
+                      className="flex-grow border-gray-300 focus:ring focus:ring-blue-500"
                     />
-                    <Button 
-                      onClick={() => removeImageField(product.id, index)}
+                    <Input
+                      type="number"
+                      placeholder="Stok"
+                      value={size.stock}
+                      onChange={(e) => {
+                        const newSizes = [...newProduct.sizes];
+                        newSizes[index].stock = parseInt(e.target.value);
+                        setNewProduct({ ...newProduct, sizes: newSizes });
+                      }}
+                      className="flex-grow border-gray-300 focus:ring focus:ring-blue-500"
+                    />
+                    <Button
+                      onClick={() => {
+                        const newSizes = newProduct.sizes.filter((_, i) => i !== index);
+                        setNewProduct({ ...newProduct, sizes: newSizes });
+                      }}
                       variant="destructive"
-                      className="ml-2"
+                      className="text-red-500 hover:text-red-600"
                     >
                       Sil
                     </Button>
                   </div>
                 ))}
-                <Button 
-                  onClick={() => addImageField(product.id)}
+                <Button
+                  onClick={() => setNewProduct({ ...newProduct, sizes: [...newProduct.sizes, { size: '', stock: 0 }] })}
                   variant="outline"
-                  className="mb-2"
+                  className="border border-gray-300 hover:bg-gray-200"
                 >
-                  Resim Ekle
+                  Beden Ekle
                 </Button>
-                <Textarea
-                  value={product.description}
-                  onChange={(e) => handleInputChange(product.id, 'description', e.target.value)}
-                  className="mb-2"
-                />
-                <Select
-                  value={product.category}
-                  onValueChange={(value) => handleInputChange(product.id, 'category', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Kategori Seçin" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <div className="mt-4">
-                  <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
-                  {product.sizes.map((size, index) => (
-                    <div key={index} className="flex gap-2 mb-2">
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                onClick={handleAddProduct}
+                className="bg-green-500 text-white hover:bg-green-600"
+              >
+                Ürün Ekle
+              </Button>
+            </CardFooter>
+          </Card>
+        )}
+  
+        <div className="mb-6">
+          <Select
+            value={selectedCategory}
+            onValueChange={setSelectedCategory}
+            className="w-full"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Kategori Seçin" />
+            </SelectTrigger>
+            <SelectContent>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.name}>
+                  {category.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+  
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.length === 0 ? (
+            <p className="text-gray-500">Bu kategoride ürün bulunmamaktadır.</p>
+          ) : (
+            products.map((product) => (
+              <Card key={product.id} className="shadow-md">
+                <CardHeader>
+                  <CardTitle className="font-semibold text-lg">{product.name}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Input
+                    type="text"
+                    value={product.name}
+                    onChange={(e) => handleInputChange(product.id, 'name', e.target.value)}
+                    className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+                  />
+                  <Input
+                    type="number"
+                    value={product.price}
+                    onChange={(e) => handleInputChange(product.id, 'price', parseFloat(e.target.value))}
+                    className="mb-4 border-gray-300 focus:ring focus:ring-blue-500"
+                  />
+                  {product.images.map((image, index) => (
+                    <div key={index} className="flex items-center mb-4">
                       <Input
                         type="text"
-                        value={size.size}
-                        onChange={(e) => handleSizeChange(product.id, index, 'size', e.target.value)}
-                      />
-                      <Input
-                        type="number"
-                        value={size.stock}
-                        onChange={(e) => handleSizeChange(product.id, index, 'stock', parseInt(e.target.value))}
+                        value={image}
+                        onChange={(e) => handleImageChange(product.id, index, e.target.value)}
+                        className="flex-grow border-gray-300 focus:ring focus:ring-blue-500"
                       />
                       <Button 
-                        onClick={() => handleRemoveSize(product.id, index)}
+                        onClick={() => removeImageField(product.id, index)}
                         variant="destructive"
+                        className="ml-2"
                       >
                         Sil
                       </Button>
                     </div>
                   ))}
                   <Button 
-                    onClick={() => handleAddSize(product.id)}
+                    onClick={() => addImageField(product.id)}
                     variant="outline"
+                    className="mb-2"
                   >
-                    Beden Ekle
+                    Resim Ekle
                   </Button>
-                </div>
-              </CardContent>
-              <CardFooter>
-                <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive" className="mr-2">
-                  Sil
-                </Button>
-                <Button onClick={() => handleUpdateProduct(product.id)} variant="default">
-                  Güncelle
-                </Button>
-              </CardFooter>
-            </Card>
-          ))
-        )}
+                  <Textarea
+                    value={product.description}
+                    onChange={(e) => handleInputChange(product.id, 'description', e.target.value)}
+                    className="mb-2"
+                  />
+                  <Select
+                    value={product.category}
+                    onValueChange={(value) => handleInputChange(product.id, 'category', value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Kategori Seçin" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <div className="mt-4">
+                    <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
+                    {product.sizes.map((size, index) => (
+                      <div key={index} className="flex gap-2 mb-2">
+                        <Input
+                          type="text"
+                          value={size.size}
+                          onChange={(e) => handleSizeChange(product.id, index, 'size', e.target.value)}
+                        />
+                        <Input
+                          type="number"
+                          value={size.stock}
+                          onChange={(e) => handleSizeChange(product.id, index, 'stock', parseInt(e.target.value))}
+                        />
+                        <Button 
+                          onClick={() => handleRemoveSize(product.id, index)}
+                          variant="destructive"
+                        >
+                          Sil
+                        </Button>
+                      </div>
+                    ))}
+                    <Button 
+                      onClick={() => handleAddSize(product.id)}
+                      variant="outline"
+                    >
+                      Beden Ekle
+                    </Button>
+                  </div>
+                </CardContent>
+                <CardFooter>
+                  <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive" className="mr-2">
+                    Sil
+                  </Button>
+                  <Button onClick={() => handleUpdateProduct(product.id)} variant="default">
+                    Güncelle
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
+  
+
+  // return (
+  //   <div className="container mx-auto px-4 py-8">
+  //     <h1 className="text-3xl font-bold mb-6">{gender === 'women' ? 'Kadın' : 'Erkek'} Ürünleri ve Kategorileri Yönetimi</h1>
+
+  //     {success && <p className="text-green-500 mb-4">{success}</p>}
+
+  //     <div className="flex gap-4 mb-8">
+  //       <Button onClick={() => setShowCategoryForm(!showCategoryForm)} variant="default">
+  //         Kategori Ekle
+  //       </Button>
+  //       <Button onClick={() => setShowProductForm(!showProductForm)} variant="default">
+  //         Ürün Ekle
+  //       </Button>
+  //     </div>
+
+  //     {showCategoryForm && (
+  //       <Card className="mb-8">
+  //         <CardHeader>
+  //           <CardTitle>Yeni Kategori Ekle</CardTitle>
+  //         </CardHeader>
+  //         <CardContent>
+  //           <Input
+  //             type="text"
+  //             placeholder="Kategori Adı"
+  //             value={newCategory.name}
+  //             onChange={(e) => setNewCategory({ ...newCategory, name: e.target.value })}
+  //             className="mb-4"
+  //           />
+  //         </CardContent>
+  //         <CardFooter>
+  //           <Button onClick={handleAddCategory}>Kategori Ekle</Button>
+  //         </CardFooter>
+  //       </Card>
+  //     )}
+
+  //     {showProductForm && (
+  //       <Card className="mb-8">
+  //         <CardHeader>
+  //           <CardTitle>Yeni Ürün Ekle</CardTitle>
+  //         </CardHeader>
+  //         <CardContent>
+  //           <Input
+  //             type="text"
+  //             placeholder="Ürün Adı"
+  //             value={newProduct.name}
+  //             onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+  //             className="mb-2"
+  //           />
+  //           <Input
+  //             type="number"
+  //             placeholder="Fiyat"
+  //             value={newProduct.price}
+  //             onChange={(e) => setNewProduct({ ...newProduct, price: parseFloat(e.target.value) })}
+  //             className="mb-2"
+  //           />
+  //           {newProduct.images.map((image, index) => (
+  //             <div key={index} className="flex mb-2">
+  //               <Input
+  //                 type="text"
+  //                 placeholder={`Resim URL ${index + 1}`}
+  //                 value={image}
+  //                 onChange={(e) => {
+  //                   const newImages = [...newProduct.images];
+  //                   newImages[index] = e.target.value;
+  //                   setNewProduct({ ...newProduct, images: newImages });
+  //                 }}
+  //                 className="flex-grow"
+  //               />
+  //               <Button 
+  //                 onClick={() => {
+  //                   const newImages = newProduct.images.filter((_, i) => i !== index);
+  //                   setNewProduct({ ...newProduct, images: newImages });
+  //                 }}
+  //                 variant="destructive"
+  //                 className="ml-2"
+  //               >
+  //                 Sil
+  //               </Button>
+  //             </div>
+  //           ))}
+  //           <Button 
+  //             onClick={() => setNewProduct({ ...newProduct, images: [...newProduct.images, ''] })}
+  //             variant="outline"
+  //             className="mb-2"
+  //           >
+  //             Resim Ekle
+  //           </Button>
+  //           <Textarea
+  //             placeholder="Ürün Açıklaması"
+  //             value={newProduct.description}
+  //             onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+  //             className="mb-2"
+  //           />
+  //           <Select
+  //             value={newProduct.category}
+  //             onValueChange={(value) => setNewProduct({ ...newProduct, category: value })}
+  //           >
+  //             <SelectTrigger>
+  //               <SelectValue placeholder="Kategori Seçin" />
+  //             </SelectTrigger>
+  //             <SelectContent>
+  //               {categories.map((category) => (
+  //                 <SelectItem key={category.id} value={category.name}>
+  //                   {category.name}
+  //                 </SelectItem>
+  //               ))}
+  //             </SelectContent>
+  //           </Select>
+  //           <div className="mt-4">
+  //             <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
+  //             {newProduct.sizes.map((size, index) => (
+  //               <div key={index} className="flex gap-2 mb-2">
+  //                 <Input
+  //                   type="text"
+  //                   placeholder="Beden"
+  //                   value={size.size}
+  //                   onChange={(e) => {
+  //                     const newSizes = [...newProduct.sizes];
+  //                     newSizes[index].size = e.target.value;
+  //                     setNewProduct({ ...newProduct, sizes: newSizes });
+  //                   }}
+  //                 />
+  //                 <Input
+  //                   type="number"
+  //                   placeholder="Stok"
+  //                   value={size.stock}
+  //                   onChange={(e) => {
+  //                     const newSizes = [...newProduct.sizes];
+  //                     newSizes[index].stock = parseInt(e.target.value);
+  //                     setNewProduct({ ...newProduct, sizes: newSizes });
+  //                   }}
+  //                 />
+  //                 <Button 
+  //                   onClick={() => {
+  //                     const newSizes = newProduct.sizes.filter((_, i) => i !== index);
+  //                     setNewProduct({ ...newProduct, sizes: newSizes });
+  //                   }}
+  //                   variant="destructive"
+  //                 >
+  //                   Sil
+  //                 </Button>
+  //               </div>
+  //             ))}
+  //             <Button 
+  //               onClick={() => setNewProduct({ ...newProduct, sizes: [...newProduct.sizes, { size: '', stock: 0 }] })}
+  //               variant="outline"
+  //             >
+  //               Beden Ekle
+  //             </Button>
+  //           </div>
+  //         </CardContent>
+  //         <CardFooter>
+  //           <Button onClick={handleAddProduct}>Ürün Ekle</Button>
+  //         </CardFooter>
+  //       </Card>
+  //     )}
+
+  //     <div className="mb-4">
+  //       <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+  //         <SelectTrigger>
+  //           <SelectValue placeholder="Kategori Seçin" />
+  //         </SelectTrigger>
+  //         <SelectContent>
+  //           {categories.map((category) => (
+  //             <SelectItem key={category.id} value={category.name}>
+  //               {category.name}
+  //             </SelectItem>
+  //           ))}
+  //         </SelectContent>
+  //       </Select>
+  //     </div>
+
+  //     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  //       {products.length === 0 ? (
+  //         <p>Bu kategoride ürün bulunmamaktadır.</p>
+  //       ) : (
+  //         products.map((product) => (
+  //           <Card key={product.id}>
+  //             <CardHeader>
+  //               <CardTitle>{product.name}</CardTitle>
+  //             </CardHeader>
+  //             <CardContent>
+  //               <Input
+  //                 type="text"
+  //                 value={product.name}
+  //                 onChange={(e) => handleInputChange(product.id, 'name', e.target.value)}
+  //                 className="mb-2"
+  //               />
+  //               <Input
+  //                 type="number"
+  //                 value={product.price}
+  //                 onChange={(e) => handleInputChange(product.id, 'price', parseFloat(e.target.value))}
+  //                 className="mb-2"
+  //               />
+  //               {product.images.map((image, index) => (
+  //                 <div key={index} className="flex mb-2">
+  //                   <Input
+  //                     type="text"
+  //                     value={image}
+  //                     onChange={(e) => handleImageChange(product.id, index, e.target.value)}
+  //                     className="flex-grow"
+  //                   />
+  //                   <Button 
+  //                     onClick={() => removeImageField(product.id, index)}
+  //                     variant="destructive"
+  //                     className="ml-2"
+  //                   >
+  //                     Sil
+  //                   </Button>
+  //                 </div>
+  //               ))}
+  //               <Button 
+  //                 onClick={() => addImageField(product.id)}
+  //                 variant="outline"
+  //                 className="mb-2"
+  //               >
+  //                 Resim Ekle
+  //               </Button>
+  //               <Textarea
+  //                 value={product.description}
+  //                 onChange={(e) => handleInputChange(product.id, 'description', e.target.value)}
+  //                 className="mb-2"
+  //               />
+  //               <Select
+  //                 value={product.category}
+  //                 onValueChange={(value) => handleInputChange(product.id, 'category', value)}
+  //               >
+  //                 <SelectTrigger>
+  //                   <SelectValue placeholder="Kategori Seçin" />
+  //                 </SelectTrigger>
+  //                 <SelectContent>
+  //                   {categories.map((category) => (
+  //                     <SelectItem key={category.id} value={category.name}>
+  //                       {category.name}
+  //                     </SelectItem>
+  //                   ))}
+  //                 </SelectContent>
+  //               </Select>
+  //               <div className="mt-4">
+  //                 <h4 className="font-semibold mb-2">Bedenler ve Stoklar</h4>
+  //                 {product.sizes.map((size, index) => (
+  //                   <div key={index} className="flex gap-2 mb-2">
+  //                     <Input
+  //                       type="text"
+  //                       value={size.size}
+  //                       onChange={(e) => handleSizeChange(product.id, index, 'size', e.target.value)}
+  //                     />
+  //                     <Input
+  //                       type="number"
+  //                       value={size.stock}
+  //                       onChange={(e) => handleSizeChange(product.id, index, 'stock', parseInt(e.target.value))}
+  //                     />
+  //                     <Button 
+  //                       onClick={() => handleRemoveSize(product.id, index)}
+  //                       variant="destructive"
+  //                     >
+  //                       Sil
+  //                     </Button>
+  //                   </div>
+  //                 ))}
+  //                 <Button 
+  //                   onClick={() => handleAddSize(product.id)}
+  //                   variant="outline"
+  //                 >
+  //                   Beden Ekle
+  //                 </Button>
+  //               </div>
+  //             </CardContent>
+  //             <CardFooter>
+  //               <Button onClick={() => handleDeleteProduct(product.id)} variant="destructive" className="mr-2">
+  //                 Sil
+  //               </Button>
+  //               <Button onClick={() => handleUpdateProduct(product.id)} variant="default">
+  //                 Güncelle
+  //               </Button>
+  //             </CardFooter>
+  //           </Card>
+  //         ))
+  //       )}
+  //     </div>
+  //   </div>
+  // );
 }
 

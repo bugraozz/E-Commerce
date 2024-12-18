@@ -34,7 +34,7 @@ export function Footer() {
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-lg font-semibold mb-4">Hakkımızda</h3>
+            <h3 className="text-lg font-semibold mb-4">About us</h3>
             <ul className="space-y-2">
               <li><Link href="/hakkimizda" className="hover:underline">Şirketimiz</Link></li>
               <li><Link href="/kariyer" className="hover:underline">Kariyer</Link></li>
@@ -42,7 +42,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Yardım</h3>
+            <h3 className="text-lg font-semibold mb-4">Help</h3>
             <ul className="space-y-2">
               <li><Link href="/sss" className="hover:underline">Sıkça Sorulan Sorular</Link></li>
               <li><Link href="/iade-politikasi" className="hover:underline">İade Politikası</Link></li>
@@ -50,7 +50,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">Sosyal Medya</h3>
+            <h3 className="text-lg font-semibold mb-4">Social Media</h3>
             <ul className="space-y-2">
               <li><a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Facebook</a></li>
               <li><a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Twitter</a></li>
@@ -58,7 +58,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h3 className="text-lg font-semibold mb-4">İçerik Sayfaları</h3>
+            <h3 className="text-lg font-semibold mb-4">Content Pages</h3>
             <ul className="space-y-2">
               {contentPages.map((page) => (
                 <li key={page.slug}>

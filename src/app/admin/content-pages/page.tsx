@@ -6,6 +6,7 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Footer } from '@/components/Footer';
 
 interface ContentPage {
   slug: string;
@@ -156,71 +157,119 @@ export default function ContentPagesAdmin() {
   if (isLoading) {
     return <div>Yükleniyor...</div>;
   }
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">İçerik Sayfaları Yönetimi</h1>
-      
-      <form onSubmit={handleSubmit} className="mb-8">
-        <h2 className="text-xl font-semibold mb-2">Yeni Sayfa Ekle</h2>
-        <Input
-          type="text"
-          placeholder="Slug"
-          value={newPage.slug}
-          onChange={(e) => setNewPage({ ...newPage, slug: e.target.value })}
-          className="mb-2"
-          required
-        />
-        <Input
-          type="text"
-          placeholder="Başlık"
-          value={newPage.title}
-          onChange={(e) => setNewPage({ ...newPage, title: e.target.value })}
-          className="mb-2"
-          required
-        />
-        <Textarea
-          placeholder="İçerik"
-          value={newPage.content}
-          onChange={(e) => setNewPage({ ...newPage, content: e.target.value })}
-          className="mb-2"
-          required
-        />
-        <Button type="submit">Sayfa Ekle</Button>
-      </form>
-
-      <h2 className="text-xl font-semibold mb-2">Mevcut Sayfalar</h2>
-      {pages.map((page) => (
-        <div key={page.slug} className="border p-4 mb-4 rounded">
-          {editingPage?.slug === page.slug ? (
-            <form onSubmit={handleEdit}>
-              <Input
-                type="text"
-                value={editingPage.title}
-                onChange={(e) => setEditingPage({ ...editingPage, title: e.target.value })}
-                className="mb-2"
-                required
-              />
-              <Textarea
-                value={editingPage.content}
-                onChange={(e) => setEditingPage({ ...editingPage, content: e.target.value })}
-                className="mb-2"
-                required
-              />
-              <Button type="submit" className="mr-2">Kaydet</Button>
-              <Button type="button" variant="outline" onClick={() => setEditingPage(null)}>İptal</Button>
-            </form>
-          ) : (
-            <>
-              <h3 className="text-lg font-semibold">{page.title}</h3>
-              <p className="text-sm text-gray-500 mb-2">Slug: {page.slug}</p>
-              <p className="mb-2">{page.content.substring(0, 100)}...</p>
-              <Button onClick={() => setEditingPage(page)} className="mr-2">Düzenle</Button>
-              <Button onClick={() => handleDelete(page.slug)} variant="destructive">Sil</Button>
-            </>
-          )}
-        </div>
-      ))}
+    <div className="container mx-auto py-8 px-6 bg-gray-100 min-h-screen">
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h1 className="text-3xl font-extrabold text-gray-800 mb-6">İçerik Sayfaları Yönetimi</h1>
+  
+        <form onSubmit={handleSubmit} className="mb-10">
+          <h2 className="text-2xl font-bold text-blue-600 mb-4">Yeni Sayfa Ekle</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+            <Input
+              type="text"
+              placeholder="Slug"
+              value={newPage.slug}
+              onChange={(e) => setNewPage({ ...newPage, slug: e.target.value })}
+              className="border-gray-300 focus:ring focus:ring-blue-500 rounded-lg px-4 py-2"
+              required
+            />
+            <Input
+              type="text"
+              placeholder="Başlık"
+              value={newPage.title}
+              onChange={(e) => setNewPage({ ...newPage, title: e.target.value })}
+              className="border-gray-300 focus:ring focus:ring-blue-500 rounded-lg px-4 py-2"
+              required
+            />
+          </div>
+          <Textarea
+            placeholder="İçerik"
+            value={newPage.content}
+            onChange={(e) => setNewPage({ ...newPage, content: e.target.value })}
+            className="border-gray-300 focus:ring focus:ring-blue-500 rounded-lg w-full px-4 py-2"
+            rows={6}
+            required
+          />
+          <Button
+            type="submit"
+            className="bg-blue-600 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 mt-4"
+          >
+            Sayfa Ekle
+          </Button>
+        </form>
+  
+        <h2 className="text-2xl font-bold text-blue-600 mb-6">Mevcut Sayfalar</h2>
+        {pages.length === 0 ? (
+          <p className="text-gray-500">Henüz eklenmiş bir sayfa bulunmamaktadır.</p>
+        ) : (
+          <div className="space-y-6">
+            {pages.map((page) => (
+              <div key={page.slug} className="border border-gray-300 rounded-lg p-6 bg-white shadow-sm">
+                {editingPage?.slug === page.slug ? (
+                  <form onSubmit={handleEdit} className="space-y-4">
+                    <Input
+                      type="text"
+                      value={editingPage.title}
+                      onChange={(e) => setEditingPage({ ...editingPage, title: e.target.value })}
+                      className="border-gray-300 focus:ring focus:ring-blue-500 rounded-lg px-4 py-2"
+                      required
+                    />
+                    <Textarea
+                      value={editingPage.content}
+                      onChange={(e) => setEditingPage({ ...editingPage, content: e.target.value })}
+                      className="border-gray-300 focus:ring focus:ring-blue-500 rounded-lg w-full px-4 py-2"
+                      rows={6}
+                      required
+                    />
+                    <div className="flex gap-4">
+                      <Button
+                        type="submit"
+                        className="bg-green-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-green-700"
+                      >
+                        Kaydet
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="bg-gray-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-gray-300"
+                        onClick={() => setEditingPage(null)}
+                      >
+                        İptal
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">{page.title}</h3>
+                    <p className="text-sm text-gray-500 mb-4">Slug: {page.slug}</p>
+                    <p className="text-gray-700 mb-4">{page.content.substring(0, 100)}...</p>
+                    <div className="flex gap-4">
+                      <Button
+                        onClick={() => setEditingPage(page)}
+                        className="bg-blue-600 text-white font-semibold px-4 py-2 rounded-lg hover:bg-blue-600"
+                      >
+                        Düzenle
+                      </Button>
+                      <Button
+                        onClick={() => handleDelete(page.slug)}
+                        variant="destructive"
+                        className="bg-red-500 text-white font-semibold px-4 py-2 rounded-lg hover:bg-red-600"
+                      >
+                        Sil
+                      </Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
+  
 }
+
+
+
+

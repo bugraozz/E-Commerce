@@ -8,6 +8,7 @@ import ImageCarousel from '@/components/ImageCorousel'
 import { UserMenu } from '@/components/UserMenu'
 import { ShoppingCard } from '@/components/ShoppingCard'
 import { Footer } from '@/components/Footer'
+import Header from '@/components/Header'
 
 const womenImages = [
   '/image3.jpg',
@@ -25,31 +26,9 @@ const menImages = [
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <nav className="bg-background border-b">
-        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <Link href="/women">
-              <Button variant="ghost">Kadın</Button>
-            </Link>
-            <Link href="/men">
-              <Button variant="ghost">Erkek</Button>
-            </Link>
-          </div>
-          <div className="text-2xl font-bold">C&B</div>
-          <div className="flex items-center space-x-3">
-            <Search className="h-5 w-5" />
-            <UserMenu />
-            <ShoppingCard />
-            <Link href="/wishlist">
-              <Heart className="h-5 w-5 " />
-            </Link>
-            <ModeToggle />
-          </div>
-        </div>
-      </nav>
-
-      <main className="container mx-auto px-4 py-12 ">
+    <div className="min-h-screen bg-background text-foreground mt-0">
+      <Header />
+      <main className="container mx-auto px-4 py-12  mt-0">
         <div className="flex w-full h-[70vh] mb-8 ">
           <div className="w-1/2 h-full relative cursor-pointer ">
             <ImageCarousel
@@ -91,7 +70,6 @@ export default function HomePage() {
           <Button variant="secondary">Kampanyayı Keşfet</Button>
         </div>
       </main>
-
       <Footer />
     </div>
   )

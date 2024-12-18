@@ -20,6 +20,9 @@ interface UserInfo {
   adress: string
   phone: string
   gender: string
+  city: string
+  country: string
+  zipcode: string
 }
 
 export default function UserProfile() {
@@ -161,6 +164,36 @@ export default function UserProfile() {
                   id="phone"
                   name="phone"
                   value={user.phone}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="city">City</Label>
+                <Input
+                  id="city"
+                  name="city"
+                  value={user.city}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="country">Country</Label>
+                <Input
+                  id="country"
+                  name="country"
+                  value={user.country}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="zipcode">Zip Code</Label>
+                <Input
+                  id="zipcode"
+                  name="zipcode"
+                  value={user.zipcode}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />

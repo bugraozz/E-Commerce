@@ -79,6 +79,31 @@ export default async function handler(req, res) {
     } catch (error) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
+  } else if (req.method === 'DELETE') {
+    const { id } = req.body;
+    const token = req.headers.authorization?.split(' ')[1];
+
+    if (!token) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (!id) {
+        return res.status(400).json({ error: 'Eksik veri: id gerekli!' });
+      }
+
+      await db.query(
+        'DELETE FROM "Users" WHERE id = $1',
+        [id]
+      );
+
+      res.status(200).json({ message: 'User deleted', id });
+    } catch (error) {
+      console.error('Database error:', error);
+      res.status(500).json({ error: 'Internal server error' });
+    }
   } else {
     res.setHeader('Allow', ['POST', 'GET', 'PUT']);
     res.status(405).end(`Method ${req.method} Not Allowed`);

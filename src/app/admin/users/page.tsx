@@ -1,11 +1,9 @@
-
-
-
 'use client';
 
 import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
+import { Button } from '@/components/ui/button';
 import {
     Table,
     TableBody,
@@ -86,6 +84,32 @@ export default function AdminUsersPage() {
         }
       };
 
+      const deleteUser = async (id: string) => {
+        try {
+            const token = getToken();
+            if(!token){
+                throw new Error('No authorization token available');
+            }
+            const response = await fetch(`/api/users`,{
+                method: 'DELETE',
+                headers: {
+                    'content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({id}),
+            });
+            if(!response.ok){
+                const error = await response.json();
+                throw new Error(error.message || 'API hatası');
+            }
+            const deletedUser = await response.json();
+            setUsers((prevUsers) => prevUsers.filter((user) => user.id !== deletedUser.id));
+        } catch (error) {
+            console.error('Hata:', error instanceof Error ? error.message : error);
+
+        }
+      };
+
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -102,6 +126,7 @@ export default function AdminUsersPage() {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead>Actions</TableHead>
                                 <TableHead>Username</TableHead>
                                 <TableHead >Email</TableHead>
                                 <TableHead >Adress</TableHead>
@@ -113,6 +138,9 @@ export default function AdminUsersPage() {
                         <TableBody>
                             {users.map((user) => (
                                 <TableRow key={user.id}>
+                                    <TableCell>
+                                        <Button variant="destructive" onClick={() => deleteUser(user.id)}>Delete</Button>
+                                    </TableCell>
                                     <TableCell >{user.Username}</TableCell>
                                     <TableCell >{user.email}</TableCell>
                                     <TableCell >{user.adress}</TableCell>

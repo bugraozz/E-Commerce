@@ -1,59 +1,136 @@
+// 'use client'
+
+// import Link from 'next/link'
+// import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+// import { Button } from "@/components/ui/button"
+// import { useAuth } from '@/contexts/AuthContext'
+
+// export default function AdminPage() {
+
+//   const { logout } = useAuth()
+//   return (
+//     <div className="container mx-auto px-4 py-8">
+//       <h1 className="text-3xl font-bold mb-6">Admin Paneli</h1>
+//       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//         <Link href="/admin/women">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Kadın Ürünleri</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p>Kadın ürünlerini düzenle</p>
+//             </CardContent>
+//           </Card>
+//         </Link>
+//         <Link href="/admin/men">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Erkek Ürünleri</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p>Erkek ürünlerini düzenle</p>
+//             </CardContent>
+//           </Card>
+//         </Link>
+//         <Link href="/admin/users" >
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Kullanıcılar</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p>Kullanıcıları düzenle</p>
+//             </CardContent>
+//           </Card>    
+//         </Link>
+//         <Link href="/admin/content-pages">
+//           <Card>
+//             <CardHeader>
+//               <CardTitle>Sayfalar</CardTitle>
+//             </CardHeader>
+//             <CardContent>
+//               <p>Sayfaları düzenle</p>
+//             </CardContent>
+//           </Card>
+//         </Link>
+//       </div>
+//       <Button onClick={logout} className="mt-4 fixed top-0 right-20 z-50">Logout</Button>
+//     </div>
+//   )
+// }
+
+
 'use client'
 
-import Link from 'next/link'
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { useAuth } from '@/contexts/AuthContext'
+import Link from 'next/link';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useAuth } from '@/contexts/AuthContext';
+import { FaUser, FaTshirt, FaFileAlt } from "react-icons/fa"; // Import icons
+import { MdFemale, MdMale } from "react-icons/md";
 
 export default function AdminPage() {
+  const { logout } = useAuth();
 
-  const { logout } = useAuth()
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6">Admin Paneli</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="container mx-auto px-6 py-8">
+      <header className="flex justify-between items-center mb-8">
+        <h1 className="text-4xl font-extrabold text-gray-800">Admin Panel</h1>
+        <Button onClick={logout} className="bg-red-500 text-white hover:bg-red-600">Logout</Button>
+      </header>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Women Products */}
         <Link href="/admin/women">
-          <Card>
-            <CardHeader>
-              <CardTitle>Kadın Ürünleri</CardTitle>
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Kadın Ürünleri</CardTitle>
+              <MdFemale className="text-pink-500 text-3xl" />
             </CardHeader>
             <CardContent>
-              <p>Kadın ürünlerini düzenle</p>
+              <p>Düzenlemek için tıklayın</p>
             </CardContent>
           </Card>
         </Link>
+
+        {/* Men Products */}
         <Link href="/admin/men">
-          <Card>
-            <CardHeader>
-              <CardTitle>Erkek Ürünleri</CardTitle>
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Erkek Ürünleri</CardTitle>
+              <MdMale className="text-blue-500 text-3xl" />
             </CardHeader>
             <CardContent>
-              <p>Erkek ürünlerini düzenle</p>
+              <p>Düzenlemek için tıklayın</p>
             </CardContent>
           </Card>
         </Link>
-        <Link href="/admin/users" >
-          <Card>
-            <CardHeader>
-              <CardTitle>Kullanıcılar</CardTitle>
+
+        {/* Users */}
+        <Link href="/admin/users">
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Kullanıcılar</CardTitle>
+              <FaUser className="text-green-500 text-3xl" />
             </CardHeader>
             <CardContent>
-              <p>Kullanıcıları düzenle</p>
+              <p>Kullanıcıları yönetmek için tıklayın</p>
             </CardContent>
-          </Card>    
+          </Card>
         </Link>
+
+        {/* Content Pages */}
         <Link href="/admin/content-pages">
-          <Card>
-            <CardHeader>
-              <CardTitle>Sayfalar</CardTitle>
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Sayfalar</CardTitle>
+              <FaFileAlt className="text-yellow-500 text-3xl" />
             </CardHeader>
             <CardContent>
-              <p>Sayfaları düzenle</p>
+              <p>Sayfaları düzenlemek için tıklayın</p>
             </CardContent>
           </Card>
         </Link>
       </div>
-      <Button onClick={logout} className="mt-4 fixed top-0 right-20 z-50">Logout</Button>
     </div>
-  )
+  );
 }
