@@ -22,7 +22,9 @@ export default function Header() {
               </div>
               <div className="text-2xl font-bold">C&B</div>
               <div className="flex items-center space-x-3">
+                <Link href="/search">
                 <Search className="h-5 w-5" />
+                </Link>
                 <UserMenu />
                 <ShoppingCard />
                 <Link href="/wishlist">

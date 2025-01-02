@@ -1,53 +1,3 @@
-// import { NextApiRequest, NextApiResponse } from 'next'
-// import db from '../../../lib/db'
-
-// export default async function handler(req, res) {
-//   if (req.method !== 'POST') {
-//     return res.status(405).json({ message: 'Method not allowed' })
-//   }
-
-//   const { items } = req.body
-
-//   if (!items || !Array.isArray(items)) {
-//     return res.status(400).json({ message: 'Invalid request body' })
-//   }
-
-//   try {
-//     await db.query('BEGIN')
-
-//     for (const item of items) {
-//       const { id, size, quantity } = item
-
-//       // Update stock
-//       const result = await db.query(
-//         'UPDATE "ProductSizes" SET stock = stock - $1 WHERE product_id = $2 AND size = $3 RETURNING stock',
-//         [quantity, id, size]
-//       )
-
-//       if (result.rows.length === 0) {
-//         throw new Error(`Product not found: id=${id}, size=${size}`)
-//       }
-
-//       const newStock = result.rows[0].stock
-
-//       if (newStock < 0) {
-//         throw new Error(`Insufficient stock for product: id=${id}, size=${size}`)
-//       }
-//     }
-
-//     // Here you would typically also save the order details to an Orders table
-
-//     await db.query('COMMIT')
-
-//     res.status(200).json({ message: 'Order confirmed and stock updated successfully' })
-//   } catch (error) {
-//     await db.query('ROLLBACK')
-//     console.error('Error confirming order:', error)
-//     res.status(500).json({ message: 'Error confirming order', error: error.message })
-//   }
-// }
-
-
 
 
 
@@ -75,7 +25,7 @@ export default async function handler(req, res) {
       locale: Iyzipay.LOCALE.TR,
       conversationId: '123456789',
       token: token
-    }, async function (err: any, result: any) {
+    }, async function (err, result) {
       if (err) {
         console.error('Iyzico error:', err)
         return res.status(500).json({ message: 'Payment verification failed' })

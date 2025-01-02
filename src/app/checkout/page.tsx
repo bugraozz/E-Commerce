@@ -36,16 +36,16 @@ export default function CheckoutPage() {
     setIsProcessing(true);
     try {
       const body = {
-        Username: `${user.firstName} ${user.lastName}`, // Ensure we're sending the full name
+        Username: user.Username, // Ensure 'user.name' contains the full name
         email: user.email,
         adress: user.adress,
         city: user.city,
         country: user.country,
         zipcode: user.zipcode,
-        cardNumber: '4111111111111111', // Test kart numarası
-        cardExpiry: '12/26', // Test son kullanma tarihi
-        cardCVC: '123', // Test CVC
-        totalAmount: totalPrice.toFixed(2), // Toplam tutarı iki ondalık basamağa yuvarlayın
+        cardNumber: '4111111111111111', // Replace with actual card number input
+        cardExpiry: '12/26', // Replace with actual expiry input
+        cardCVC: '123', // Replace with actual CVC input
+        totalAmount: totalPrice,
       };
   
       const response = await fetch('/api/create-payment', {
@@ -59,11 +59,11 @@ export default function CheckoutPage() {
   
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Ödeme oluşturulurken bir hata oluştu');
+        throw new Error(errorData.message || 'Failed to create payment');
       }
   
       const { paymentPageUrl } = await response.json();
-      router.push(paymentPageUrl); // Router.push yerine window.location.href kullanın
+      router.push(paymentPageUrl);
     } catch (error) {
       console.error('Error creating payment:', error);
       toast.error(`Ödeme oluşturulurken bir hata oluştu: ${error.message}`);
@@ -71,7 +71,6 @@ export default function CheckoutPage() {
       setIsProcessing(false);
     }
   };
-  
   
 
 
@@ -120,7 +119,6 @@ export default function CheckoutPage() {
     </div>
   )
 }
-
 
 
 
