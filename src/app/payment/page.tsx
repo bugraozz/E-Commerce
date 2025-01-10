@@ -15,10 +15,11 @@ import { toast } from 'react-hot-toast'
 type PaymentFormData = {
     Username: string
   email: string
-  address: string
+  phone: string
+  adress: string
   city: string
   country: string
-  zipCode: string
+  zipcode: string
   cardNumber: string
   cardExpiry: string
   cardCVC: string
@@ -50,10 +51,11 @@ export default function PaymentPage() {
         const userData = await response.json()
         setValue('Username', userData.name)
         setValue('email', userData.email)
-        setValue('address', userData.address)
+        setValue('phone', userData.gsmNumber)
+        setValue('adress', userData.address)
         setValue('city', userData.city)
         setValue('country', userData.country)
-        setValue('zipCode', userData.zip_code)
+        setValue('zipcode', userData.zip_code)
       } else {
         toast.error('Kullanıcı bilgileri alınamadı')
       }
@@ -79,10 +81,11 @@ export default function PaymentPage() {
         body: JSON.stringify({
           Username: data.Username,
           email: data.email,
-          address: data.address,
+          gsmNumber: data.phone,
+          address: data.adress,
           city: data.city,
           country: data.country,
-          zipCode: data.zipCode,
+          zipCode: data.zipcode,
           cardNumber: data.cardNumber,
           cardExpiry: data.cardExpiry,
           cardCVC: data.cardCVC,

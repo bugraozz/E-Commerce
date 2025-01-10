@@ -1,6 +1,8 @@
 import db from '../../../lib/db';
 
-export default async function handler(req, res) {
+import { NextApiRequest, NextApiResponse } from 'next';
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
     const { category, gender, sizes } = req.query;
     try {
@@ -85,4 +87,6 @@ export default async function handler(req, res) {
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
+
+
 

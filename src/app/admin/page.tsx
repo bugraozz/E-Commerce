@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useAuth } from '@/contexts/AuthContext';
-import { FaUser, FaTshirt, FaFileAlt } from "react-icons/fa"; // Import icons
+import { FaUser, FaTshirt, FaFileAlt, FaSquare, FaChartBar } from "react-icons/fa"; // Import icons
 import { MdFemale, MdMale } from "react-icons/md";
 
 export default function AdminPage() {
@@ -68,6 +68,32 @@ export default function AdminPage() {
             </CardHeader>
             <CardContent>
               <p>Sayfaları düzenlemek için tıklayın</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+
+        {/* ProductsStock */}
+        <Link href="/admin/products-stock">
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Ürün Stokları</CardTitle>
+              <FaSquare className="text-purple-500 text-3xl" />
+            </CardHeader>
+            <CardContent>
+              <p>Ürün Stoklarını düzenlemek için tıklayın</p>
+            </CardContent>
+          </Card>
+        </Link>
+
+        <Link href="/admin/sales-dashboard">
+          <Card className="hover:shadow-lg transform transition duration-300 hover:scale-105">
+            <CardHeader className="flex items-center justify-between">
+              <CardTitle className="text-lg font-bold">Satışlar</CardTitle>
+              <FaChartBar className="text-red-500 text-3xl" />
+            </CardHeader>
+            <CardContent>
+              <p>Satışları görmek için tıklayın</p>
             </CardContent>
           </Card>
         </Link>

@@ -30,35 +30,47 @@ export default function OrdersPage() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        const token = getToken()
-        console.log('Fetching orders with token:', token)
-        const response = await fetch('/api/order', {
+        const token = getToken();
+        const basketId = user?.basketId;
+  
+        if (!basketId) {
+          console.error('Basket ID is undefined or missing');
+          toast.error('Kullanıcıya ait sepet bilgisi bulunamadı');
+          setIsLoading(false);
+          return;
+        }
+  
+        console.log('Fetching orders with basketId:', basketId);
+  
+        const response = await fetch(`/api/orders?basket_id=${basketId}`, {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+  
         if (response.ok) {
-          const data = await response.json()
-          console.log('Received orders:', data)
-          setOrders(data)
+          const data = await response.json();
+          console.log('Received orders:', data);
+          setOrders(data);
         } else {
-          console.error('Failed to fetch orders:', response.status, response.statusText)
-          const errorData = await response.text()
-          console.error('Error data:', errorData)
-          toast.error('Siparişler alınamadı')
+          console.error('Failed to fetch orders:', response.status, response.statusText);
+          const errorData = await response.text();
+          console.error('Error data:', errorData);
+          toast.error('Siparişler alınamadı');
         }
       } catch (error) {
-        console.error('Error fetching orders:', error)
-        toast.error('Siparişler alınırken bir hata oluştu')
+        console.error('Error fetching orders:', error);
+        toast.error('Siparişler alınırken bir hata oluştu');
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
-
-    fetchOrders()
-  }, [getToken])
+    };
+  
+    fetchOrders();
+  }, [getToken, user?.basketId]);
+  
 
   if (isLoading) {
     return <div className="text-center mt-8">Yükleniyor...</div>

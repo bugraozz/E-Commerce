@@ -1,10 +1,13 @@
 
+
+
 'use client'
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface ContentPage {
+  id: number
   slug: string
   title: string
 }
@@ -15,7 +18,7 @@ export function Footer() {
   useEffect(() => {
     async function fetchContentPages() {
       try {
-        const response = await fetch('/api/admin/content-pages')
+        const response = await fetch('/api/public/content-pages')
         if (!response.ok) {
           throw new Error('İçerik sayfaları yüklenirken bir hata oluştu')
         }
@@ -23,6 +26,7 @@ export function Footer() {
         setContentPages(pages)
       } catch (error) {
         console.error('İçerik sayfaları yüklenirken hata:', error)
+        setContentPages([]) // Set empty array in case of error
       }
     }
 
@@ -61,7 +65,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">Content Pages</h3>
             <ul className="space-y-2">
               {contentPages.map((page) => (
-                <li key={page.slug}>
+                <li key={page.id}>
                   <Link href={`/${page.slug}`} className="hover:underline">
                     {page.title}
                   </Link>
@@ -71,9 +75,12 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-8 text-center text-sm text-gray-500">
-          &copy; {new Date().getFullYear()} H&M Clone. Tüm hakları saklıdır.
+          &copy; {new Date().getFullYear()} Your Company Name. Tüm hakları saklıdır.
         </div>
       </div>
     </footer>
   )
 }
+
+
+

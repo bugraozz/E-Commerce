@@ -57,7 +57,7 @@ export default async function handler(req, res) {
         id: userData.id.toString(),
         name: userData.name.split(' ')[0],
         surname: userData.name.split(' ')[1] || '',
-        gsmNumber: userData.phone || '+905350000000',
+        gsmNumber: userData.phone,
         email: userData.email,
         identityNumber: userData.identity_number || '74300864791',
         lastLoginDate: userData.last_login ? new Date(userData.last_login).toISOString() : '2015-10-05 12:43:35',

@@ -18,7 +18,7 @@ export default async function handler(req, res) {
     const userId = decoded.id
 
     const user = await db.query(
-      'SELECT Username, email, adress, city, country, zipcode FROM "Users" WHERE id = $1',
+      'SELECT Username, email, phone, adress, city, country, zipcode FROM "Users" WHERE id = $1',
       [userId]
     )
 

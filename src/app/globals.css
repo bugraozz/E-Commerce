@@ -61,26 +61,119 @@ body {
     --chart-5: 340 75% 55%;
   }
   .pink {
-    --background: 330 40% 70%;
-    --foreground: 330 40% 30%;
-    --primary: 330 70% 50%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 330 70% 50%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 330 100% 50%;
-    --muted-foreground: 0 0% 98%;
-    --accent: 330 70% 50%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 330 100% 50%;
-    --destructive-foreground: 0 0% 98%;
-    --chart-1: 330 100% 50%;
-    --chart-2: 330 100% 50%;
-    --chart-3: 330 100% 50%;
-    --chart-4: 330 100% 50%;
-    --chart-5: 330 100% 50%;
-    --card: 330 40% 30%;
-    --card-foreground: 0 0% 98%;
+    --background: 330 20% 15%; /* Koyu gül pembesi */
+    --foreground: 330 15% 85%; /* Soluk pembe krem */
+    --primary: 330 40% 35%; /* Orta gül pembesi */
+    --primary-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --secondary: 320 35% 30%; /* Derin şarap pembesi */
+    --secondary-foreground: 0 0% 90%; /* Açık krem */
+    --muted: 330 25% 20%; /* Koyu ahududu pembesi */
+    --muted-foreground: 330 20% 80%; /* Soluk pembe */
+    --accent: 330 50% 40%; /* Canlı gül rengi */
+    --accent-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --destructive: 340 60% 30%; /* Koyu erik rengi */
+    --destructive-foreground: 0 0% 90%; /* Açık krem */
+    --chart-1: 330 50% 35%; /* Orta pembe */
+    --chart-2: 340 60% 40%; /* Canlı ahududu */
+    --chart-3: 320 40% 30%; /* Şarap tonları */
+    --chart-4: 310 35% 25%; /* Derin erik rengi */
+    --chart-5: 330 60% 30%; /* Koyu mercan pembe */
+    --card: 330 20% 12%; /* Daha koyu gül pembesi */
+    --card-foreground: 330 15% 85%; /* Soluk pembe krem */
   }
+  
+
+  .soft {
+    --background: 210 30% 95%; /* Soft sky blue */
+    --foreground: 210 20% 20%; /* Deep blue-gray */
+    --primary: 200 70% 50%; /* Gentle teal */
+    --primary-foreground: 0 0% 98%; /* Almost white */
+    --secondary: 300 40% 70%; /* Soft lavender */
+    --secondary-foreground: 0 0% 98%; /* Almost white */
+    --muted: 180 40% 85%; /* Light mint green */
+    --muted-foreground: 0 0% 20%; /* Darker gray */
+    --accent: 50 70% 50%; /* Fresh lime green */
+    --accent-foreground: 0 0% 98%; /* Almost white */
+    --destructive: 10 70% 60%; /* Soft coral red */
+    --destructive-foreground: 0 0% 98%; /* Almost white */
+    --chart-1: 45 80% 55%; /* Warm yellow-orange */
+    --chart-2: 220 50% 60%; /* Cool blue */
+    --chart-3: 290 40% 70%; /* Soft purple */
+    --chart-4: 120 40% 55%; /* Soft green */
+    --chart-5: 15 70% 50%; /* Light terracotta */
+    --card: 210 30% 95%; /* Soft sky blue (matches background) */
+    --card-foreground: 210 20% 20%; /* Deep blue-gray (matches foreground) */
+  }
+
+  .green {
+    --background: 120 20% 15%; /* Koyu orman yeşili */
+    --foreground: 120 15% 90%; /* Açık krem rengi */
+    --primary: 120 50% 30%; /* Canlı zümrüt yeşili */
+    --primary-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --secondary: 100 40% 35%; /* Hafif zeytin yeşili */
+    --secondary-foreground: 0 0% 90%; /* Açık krem */
+    --muted: 120 15% 20%; /* Koyu yosun yeşili */
+    --muted-foreground: 120 15% 85%; /* Soluk açık yeşil */
+    --accent: 140 45% 35%; /* Hafif limon yeşili */
+    --accent-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --destructive: 10 70% 35%; /* Koyu tuğla kırmızısı */
+    --destructive-foreground: 0 0% 90%; /* Açık krem */
+    --chart-1: 120 50% 40%; /* Orta zümrüt yeşili */
+    --chart-2: 140 60% 35%; /* Hafif lime yeşili */
+    --chart-3: 100 40% 30%; /* Zeytin tonları */
+    --chart-4: 80 50% 35%; /* Hafif çimen yeşili */
+    --chart-5: 60 50% 25%; /* Koyu altın sarısı */
+    --card: 120 20% 12%; /* Daha koyu orman yeşili */
+    --card-foreground: 120 15% 90%; /* Açık krem rengi */
+  }
+
+  .red {
+    --background: 0 20% 15%; /* Koyu bordo */
+    --foreground: 0 15% 90%; /* Açık krem */
+    --primary: 0 50% 35%; /* Koyu kırmızı */
+    --primary-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --secondary: 0 40% 30%; /* Yakut kırmızısı */
+    --secondary-foreground: 0 0% 90%; /* Açık krem */
+    --muted: 0 25% 20%; /* Derin bordo */
+    --muted-foreground: 0 15% 85%; /* Soluk açık kırmızı */
+    --accent: 0 55% 40%; /* Canlı kırmızı */
+    --accent-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --destructive: 350 70% 30%; /* Koyu vişne */
+    --destructive-foreground: 0 0% 90%; /* Açık krem */
+    --chart-1: 0 60% 35%; /* Orta kırmızı */
+    --chart-2: 0 70% 40%; /* Hafif mercan kırmızısı */
+    --chart-3: 0 40% 30%; /* Yakut tonları */
+    --chart-4: 10 50% 25%; /* Koyu tarçın */
+    --chart-5: 350 60% 30%; /* Koyu vişne kırmızısı */
+    --card: 0 20% 12%; /* Daha koyu bordo */
+    --card-foreground: 0 15% 90%; /* Açık krem */
+  }
+
+  .blue {
+    --background: 220 20% 15%; /* Koyu lacivert */
+    --foreground: 220 15% 85%; /* Soluk mavi krem */
+    --primary: 220 50% 30%; /* Orta lacivert */
+    --primary-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --secondary: 210 40% 25%; /* Derin gök mavisi */
+    --secondary-foreground: 0 0% 90%; /* Açık krem */
+    --muted: 220 25% 20%; /* Gece mavisi */
+    --muted-foreground: 220 15% 80%; /* Soluk mavi */
+    --accent: 210 60% 35%; /* Canlı okyanus mavisi */
+    --accent-foreground: 0 0% 98%; /* Neredeyse beyaz */
+    --destructive: 200 70% 30%; /* Koyu çivit mavisi */
+    --destructive-foreground: 0 0% 90%; /* Açık krem */
+    --chart-1: 220 50% 35%; /* Orta lacivert */
+    --chart-2: 210 60% 40%; /* Canlı gök mavisi */
+    --chart-3: 200 40% 30%; /* Çivit tonları */
+    --chart-4: 190 35% 25%; /* Derin su mavisi */
+    --chart-5: 220 60% 30%; /* Hafif gece mavisi */
+    --card: 220 20% 12%; /* Daha koyu lacivert */
+    --card-foreground: 220 15% 85%; /* Soluk mavi krem */
+  }
+  
+  
+  
+  
 }
 
 @layer base {
