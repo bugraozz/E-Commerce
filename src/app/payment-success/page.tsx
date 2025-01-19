@@ -13,7 +13,7 @@ export default function PaymentSuccessPage() {
   useEffect(() => {
     // Başarılı ödemeden sonra sepeti temizle
     clearCart()
-  }, [clearCart]) // Ensure dependency array includes clearCart
+  }, [clearCart])
 
   return (
     <div className="container mx-auto p-4">

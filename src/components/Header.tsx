@@ -20,7 +20,11 @@ export default function Header() {
                   <Button variant="ghost">Men</Button>
                 </Link>
               </div>
-              <div className="text-2xl font-bold">C&B</div>
+              <div className="text-2xl font-italic">
+                <Link href="/">
+                    <p>C&B</p>
+                </Link>
+                </div>
               <div className="flex items-center space-x-3">
                 <Link href="/search">
                 <Search className="h-5 w-5" />

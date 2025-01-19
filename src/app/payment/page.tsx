@@ -1,5 +1,3 @@
-
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -100,6 +98,9 @@ export default function PaymentPage() {
       }
 
       const { paymentPageUrl } = await response.json()
+      if (!paymentPageUrl) {
+        throw new Error('Payment page URL not received')
+      }
       router.push(paymentPageUrl)
     } catch (error) {
       console.error('Ödeme hatası:', error)

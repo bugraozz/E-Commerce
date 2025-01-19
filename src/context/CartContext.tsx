@@ -1,12 +1,15 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 
-// ...existing code...
+interface CartContextType {
+  cart: any[];
+  clearCart: () => void;
+}
 
-const CartContext = createContext(null);
 
-export function CartProvider({ children }) {
+
+export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState([]);
-
+  const CartContext = createContext<CartContextType | null>(null);
   const clearCart = useCallback(() => {
     setCart([]);
   }, []); 

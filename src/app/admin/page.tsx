@@ -11,7 +11,9 @@ import { MdFemale, MdMale } from "react-icons/md";
 
 export default function AdminPage() {
   const { logout } = useAuth();
-
+  const user = useAuth();
+  
+  
   return (
     <div className="container mx-auto px-6 py-8">
       <header className="flex justify-between items-center mb-8">

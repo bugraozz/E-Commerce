@@ -22,7 +22,7 @@ export default async function handler(req, res) {
   const token = authHeader.split(' ')[1]
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { id: string }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
     const userId = decoded.id
 
     const { cardHolderName, cardNumber, expireMonth, expireYear, cvc, totalAmount } = req.body

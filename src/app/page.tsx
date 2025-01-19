@@ -9,6 +9,7 @@ import { UserMenu } from '@/components/UserMenu'
 import { ShoppingCard } from '@/components/ShoppingCard'
 import { Footer } from '@/components/Footer'
 import Header from '@/components/Header'
+import FeaturedProducts from './featured-products/page'
 
 const womenImages = [
   '/image3.jpg',
@@ -47,23 +48,7 @@ export default function HomePage() {
             />
           </div>
         </div>
-
-        <h2 className="text-2xl font-semibold mb-4">Öne Çıkan Ürünler</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 rounded-md">
-          {[1, 2, 3, 4].map((product) => (
-            <Card key={product}>
-              <CardContent className="p-0">
-                <img src={`/placeholder.svg?height=300&width=300&text=Ürün ${product}`} alt={`Ürün ${product}`} className="w-full h-48 object-cover" />
-                <div className="p-4">
-                  <h3 className="font-semibold mb-2">Ürün {product}</h3>
-                  <p className="text-sm text-muted-foreground mb-2">199,99 TL</p>
-                  <Button variant="outline" size="sm">Sepete Ekle</Button>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
+        <FeaturedProducts />
         <div className="bg-primary text-primary-foreground p-8 text-center mb-8 rounded-md">
           <h2 className="text-2xl font-semibold mb-4">Özel Kampanya</h2>
           <p className="mb-4">Seçili ürünlerde %50'ye varan indirimler!</p>
@@ -74,7 +59,5 @@ export default function HomePage() {
     </div>
   )
 }
-
-
 
 

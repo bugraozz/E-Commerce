@@ -1,4 +1,3 @@
-
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -12,13 +11,12 @@ interface OrderItem {
   name: string
   price: number
   quantity: number
-  size: string
 }
 
 interface Order {
   id: number
-  date: string
-  totalAmount: number
+  created_at: string
+  total_amount: number | string
   status: string
   items: OrderItem[]
 }
@@ -30,53 +28,45 @@ export default function OrdersPage() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      setIsLoading(true);
+      if (!user) {
+        setIsLoading(false)
+        return
+      }
+
+      setIsLoading(true)
       try {
-        const token = getToken();
-        const basketId = user?.basketId;
-  
-        if (!basketId) {
-          console.error('Basket ID is undefined or missing');
-          toast.error('Kullanıcıya ait sepet bilgisi bulunamadı');
-          setIsLoading(false);
-          return;
-        }
-  
-        console.log('Fetching orders with basketId:', basketId);
-  
-        const response = await fetch(`/api/orders?basket_id=${basketId}`, {
+        const token = getToken()
+        const response = await fetch('/api/orders', {
           headers: {
             'Authorization': `Bearer ${token}`,
           },
-        });
-  
+        })
+
         if (response.ok) {
-          const data = await response.json();
-          console.log('Received orders:', data);
-          setOrders(data);
+          const data = await response.json()
+          setOrders(data)
         } else {
-          console.error('Failed to fetch orders:', response.status, response.statusText);
-          const errorData = await response.text();
-          console.error('Error data:', errorData);
-          toast.error('Siparişler alınamadı');
+          console.error('Failed to fetch orders:', response.status, response.statusText)
+          toast.error('Siparişler alınamadı')
         }
       } catch (error) {
-        console.error('Error fetching orders:', error);
-        toast.error('Siparişler alınırken bir hata oluştu');
+        console.error('Error fetching orders:', error)
+        toast.error('Siparişler alınırken bir hata oluştu')
       } finally {
-        setIsLoading(false);
+        setIsLoading(false)
       }
-    };
-  
-    fetchOrders();
-  }, [getToken, user?.basketId]);
-  
+    }
+
+    fetchOrders()
+  }, [user, getToken])
+
+  if (!user) {
+    return <div className="text-center mt-8">Lütfen giriş yapın.</div>
+  }
 
   if (isLoading) {
     return <div className="text-center mt-8">Yükleniyor...</div>
   }
-
-  console.log('Rendering orders:', orders)
 
   return (
     <div className="container mx-auto p-4">
@@ -90,14 +80,14 @@ export default function OrdersPage() {
               <CardTitle>Sipariş #{order.id}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p>Tarih: {new Date(order.date).toLocaleDateString()}</p>
-              <p>Toplam Tutar: {order.totalAmount} TL</p>
+              <p>Tarih: {new Date(order.created_at).toLocaleDateString()}</p>
+              <p>Toplam Tutar: {parseFloat(order.total_amount as string).toFixed(2)} TL</p>
               <p>Durum: {order.status}</p>
               <h3 className="font-semibold mt-2">Ürünler:</h3>
               <ul>
                 {order.items.map((item) => (
                   <li key={item.id} className="ml-4">
-                    {item.name} - {item.size} - {item.quantity} adet - {item.price} TL
+                    {item.name} - {item.quantity} adet - {item.price.toFixed(2)} TL
                   </li>
                 ))}
               </ul>

@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         params.push(gender);
       }
       if (sizes) {
-        const sizesArray = sizes.split(',');
+        const sizesArray = typeof sizes === 'string' ? sizes.split(',') : sizes;
         conditions.push(`ps.size = ANY($${params.length + 1})`);
         params.push(sizesArray);
       }

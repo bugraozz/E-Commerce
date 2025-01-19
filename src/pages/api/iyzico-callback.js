@@ -1,116 +1,6 @@
-
-
-
-// import Iyzipay from 'iyzipay';
-// import db from '../../lib/db';
-
-// const iyzipay = new Iyzipay({
-//   apiKey: process.env.IYZICO_API_KEY,
-//   secretKey: process.env.IYZICO_SECRET_KEY,
-//   uri: 'https://sandbox-api.iyzipay.com'
-// });
-
-// export default async function handler(req, res) {
-//   console.log('Callback request body:', req.body);
-//   if (req.method !== 'POST') {
-//     return res.status(405).json({ message: 'Method not allowed' });
-//   }
-
-//   const { token } = req.body;
-
-//   if (!token) {
-//     console.error('Token is missing in the request body');
-//     return res.status(400).json({ error: 'Token is required' });
-//   }
-
-//   try {
-//     console.log('Retrieving payment with token:', token);
-//     const result = await new Promise((resolve, reject) => {
-//       iyzipay.checkoutForm.retrieve({
-//         locale: Iyzipay.LOCALE.TR,
-//         conversationId: `${Date.now()}`,
-//         token: token
-//       }, (err, result) => {
-//         if (err) {
-//           console.error('Iyzico retrieve error:', err);
-//           reject(err);
-//         } else {
-//           console.log('Iyzico retrieve result:', result);
-//           resolve(result);
-//         }
-//       });
-//     });
-
-//     console.log('Iyzico payment result:', result);
-
-//     if (result.paymentStatus === 'SUCCESS') {
-//       const { basketId, price, paidPrice, paymentId, basketItems } = result;
-      
-//       const client = await db.connect();
-//       try {
-//         await client.query('BEGIN');
-
-//         console.log('Saving order to database...');
-//         const orderResult = await client.query(
-//           'INSERT INTO orders (user_id, total_amount, status, payment_id) VALUES ($1, $2, $3, $4) RETURNING id',
-//           [basketId, paidPrice, 'completed', paymentId]
-//         );
-//         const orderId = orderResult.rows[0].id;
-//         console.log('Order saved with ID:', orderId);
-
-//         const orderItems = [];
-//         for (const item of basketItems) {
-//           console.log('Processing item:', item);
-//           await client.query(
-//             'INSERT INTO order_items (order_id, product_id, quantity, price, size) VALUES ($1, $2, $3, $4, $5)',
-//             [orderId, item.id, item.quantity, item.price, item.size]
-//           );
-//           orderItems.push({
-//             id: item.id,
-//             size: item.size,
-//             quantity: parseInt(item.quantity)
-//           });
-//         }
-
-//         await client.query('COMMIT');
-//         console.log('Order transaction committed successfully');
-
-//         // Process the order and update stock
-//         const processOrderResponse = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/process-order`, {
-//           method: 'POST',
-//           headers: {
-//             'Content-Type': 'application/json',
-//           },
-//           body: JSON.stringify({ items: orderItems }),
-//         });
-
-//         if (!processOrderResponse.ok) {
-//           const errorData = await processOrderResponse.json();
-//           throw new Error(`Failed to process order and update stock: ${errorData.message}`);
-//         }
-
-//         console.log('Stock updated successfully');
-//         return res.redirect(307, '/payment-success');
-//       } catch (error) {
-//         await client.query('ROLLBACK');
-//         console.error('Error in order processing or stock update:', error);
-//         return res.redirect(307, '/payment-error');
-//       } finally {
-//         client.release();
-//       }
-//     } else {
-//       console.log('Payment failed:', result.errorMessage);
-//       return res.redirect(307, '/payment-failed');
-//     }
-//   } catch (error) {
-//     console.error('Iyzico callback error:', error);
-//     return res.redirect(307, '/payment-error');
-//   }
-// }
-
-
 import Iyzipay from 'iyzipay';
 import { Pool } from 'pg';
+import { verifyAuth } from '@/lib/auth';
 
 let pool;
 try {
@@ -137,20 +27,35 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
-  let token = req.body.token || req.query.token;
+  const token = req.query.authToken;
+  if (!token || token === 'undefined') {
+    console.log('Invalid or missing authorization token');
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
 
-  if (!token) {
+  const authResult = verifyAuth({ headers: { authorization: `Bearer ${decodeURIComponent(token)}` } });
+
+ 
+
+  if (!authResult.authenticated) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const userId = authResult.userId;
+  let paymentToken = req.body.token || req.query.token;
+
+  if (!paymentToken) {
     console.error('Token is missing in both request body and query');
     return res.status(400).json({ error: 'Token is required' });
   }
 
   try {
-    console.log('Retrieving payment with token:', token);
+    console.log('Retrieving payment with token:', paymentToken);
     const result = await new Promise((resolve, reject) => {
       iyzipay.checkoutForm.retrieve({
         locale: Iyzipay.LOCALE.TR,
         conversationId: `${Date.now()}`,
-        token: token
+        token: paymentToken
       }, (err, result) => {
         if (err) {
           console.error('Iyzico retrieve error:', err);
@@ -180,8 +85,8 @@ export default async function handler(req, res) {
 
         console.log('Saving order to database...');
         const orderResult = await client.query(
-          'INSERT INTO orders (basket_id, total_amount, status) VALUES ($1, $2, $3) RETURNING id',
-          [basketId, paidPrice, 'completed']
+          'INSERT INTO orders (user_id, basket_id, total_amount, status) VALUES ($1, $2, $3, $4) RETURNING id',
+          [userId, basketId, paidPrice, 'completed']
         );
         const orderId = orderResult.rows[0].id;
         console.log('Order saved with ID:', orderId);
