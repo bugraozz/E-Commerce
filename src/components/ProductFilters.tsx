@@ -1,8 +1,3 @@
-
-
-
-
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -19,6 +14,7 @@ interface Category {
 interface ProductFiltersProps {
   gender: string;
   onFilterChange: (filters: FilterState) => void;
+  sizes: string[]; // Add sizes prop
 }
 
 interface FilterState {
@@ -33,25 +29,17 @@ async function fetchCategories(gender: string): Promise<Category[]> {
   return response.json();
 }
 
-async function fetchSizes(): Promise<string[]> {
-  const response = await fetch(`/api/products/sizes`);
-  if (!response.ok) throw new Error('Bedenler yüklenirken bir hata oluştu.');
-  return response.json();
-}
-
-export default function ProductFilters({ gender, onFilterChange }: ProductFiltersProps) {
+export default function ProductFilters({ gender, onFilterChange, sizes }: ProductFiltersProps) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [sizes, setSizes] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 10000]);
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [categoriesData, sizesData] = await Promise.all([fetchCategories(gender), fetchSizes()]);
+        const categoriesData = await fetchCategories(gender);
         setCategories(categoriesData);
-        setSizes(sizesData);
       } catch (error) {
         console.error('Error fetching data:', error);
       }

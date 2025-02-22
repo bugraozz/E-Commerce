@@ -1,22 +1,23 @@
-
-
-
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Separator } from "@/components/ui/separator"
+import { User, Lock, Mail, Phone, ArrowLeft } from "lucide-react";
 
 export default function AdminLoginPage() {
-    const [Username, setUsername] = useState('')
-    const [Password, setPassword] = useState('')
-    const [email, setEmail] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
-    const { login, register, error } = useAuth()
-    const [phone, setPhone] = useState('')
+  const [Username, setUsername] = useState('')
+  const [Password, setPassword] = useState('')
+  const [email, setEmail] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const { login, register, error } = useAuth()
+  const [phone, setPhone] = useState('')
+  const router = useRouter()
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,129 +30,77 @@ export default function AdminLoginPage() {
       console.error("Passwords don't match");
       return;
     }
-    await register(Username, email, Password, confirmPassword);
+    await register(Username, email, Number(phone), Password, confirmPassword);
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl font-bold text-center">Register or Login</CardTitle>
-        </CardHeader>
-        <Tabs defaultValue="login" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="login">Giriş</TabsTrigger>
-            <TabsTrigger value="register">Kayıt</TabsTrigger>
-          </TabsList>
-          <TabsContent value="login">
-            <form onSubmit={handleLogin}>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="username" className="text-sm font-medium text-gray-700">
-                    Kullanıcı Adı
-                  </label>
-                  <Input
-                    id="username"
-                    type="text"
-                    value={Username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
+    <div className="min-h-screen flex">
+      {/* Sol taraf: Görsel */}
+      <div className="hidden md:flex w-1/2 bg-cover bg-center" style={{ backgroundImage: "url('/cakmak4.jpg')" }}></div>
+      
+      {/* Sağ taraf: Giriş/Kayıt Formu */}
+      <div className="w-full md:w-1/2 flex items-center justify-center p-6 relative">
+        <Button variant="ghost" className="absolute top-4 right-4" onClick={() => router.back()}>
+          <ArrowLeft className="mr-2" size={20} />
+          Geri
+        </Button>
+        <Card className="w-full max-w-md shadow-lg border rounded-lg p-6 space-y-4">
+          <CardHeader className="text-center">
+            <CardTitle className="text-3xl font-semibold">  Hesabınıza Giriş Yapın</CardTitle>
+          </CardHeader>
+          <Tabs defaultValue="login" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="login">Giriş</TabsTrigger>
+              <TabsTrigger value="register">Kayıt</TabsTrigger>
+            </TabsList>
+            <TabsContent value="login">
+              <form onSubmit={handleLogin} className="space-y-4 p-4">
+                <div className="relative flex items-center">
+                  <User className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Kullanıcı Adı" type="text" value={Username} onChange={(e) => setUsername(e.target.value)} required />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="password" className="text-sm font-medium text-gray-700">
-                    Şifre
-                  </label>
-                  <Input
-                    id="password"
-                    type="password"
-                    value={Password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Şifre" type="password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button type="submit" className="w-full">
-                  Giriş Yap
-                </Button>
-              </CardFooter>
-            </form>
-          </TabsContent>
-          <TabsContent value="register">
-            <form onSubmit={handleRegister}>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <label htmlFor="register-username" className="text-sm font-medium text-gray-700">
-                    Kullanıcı Adı
-                  </label>
-                  <Input
-                    id="register-username"
-                    type="text"
-                    value={Username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                  />
+                <Separator className="my-4" />
+                <CardFooter>
+                  <Button type="submit" className="w-full">Giriş Yap</Button>
+                </CardFooter>
+              </form>
+            </TabsContent>
+            <TabsContent value="register">
+              <form onSubmit={handleRegister} className="space-y-4 p-4">
+                <div className="relative flex items-center">
+                  <User className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Kullanıcı Adı" type="text" value={Username} onChange={(e) => setUsername(e.target.value)} required />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="email" className="text-sm font-medium text-gray-700">
-                    E-posta
-                  </label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                <div className="space-y-2">
-                  <label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                    Telefon
-                  </label>
-                  <Input
-                    id="phone"
-                    type="text"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    required
-                  />
+                <div className="relative flex items-center">
+                  <Mail className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="E-posta" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="register-password" className="text-sm font-medium text-gray-700">
-                    Şifre
-                  </label>
-                  <Input
-                    id="register-password"
-                    type="password"
-                    value={Password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
+                <div className="relative flex items-center">
+                  <Phone className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Telefon" type="text" value={phone} onChange={(e) => setPhone(e.target.value)} required />
                 </div>
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Şifre" type="password" value={Password} onChange={(e) => setPassword(e.target.value)} required />
                 </div>
-                <div className="space-y-2">
-                  <label htmlFor="confirm-password" className="text-sm font-medium text-gray-700">
-                    Şifreyi Onayla
-                  </label>
-                  <Input
-                    id="confirm-password"
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    required
-                  />
+                <div className="relative flex items-center">
+                  <Lock className="absolute left-3 text-gray-400" size={20} />
+                  <Input className="pl-10" placeholder="Şifreyi Onayla" type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
                 </div>
-              </CardContent>
-              <CardFooter>
-                <Button type="submit" className="w-full">
-                  Kayıt Ol
-                </Button>
-              </CardFooter>
-            </form>
-          </TabsContent>
-        </Tabs>
-        {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
-      </Card>
+                <Separator className="" />
+                <CardFooter>
+                  <Button type="submit" className="w-full">Kayıt Ol</Button>
+                </CardFooter>
+              </form>
+            </TabsContent>
+          </Tabs>
+          {error && <p className="text-red-500 text-sm text-center mt-4">{error}</p>}
+        </Card>
+      </div>
     </div>
   )
 }

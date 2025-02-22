@@ -9,6 +9,8 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { ThemeProvider } from "@/components/theme-provider"
 import { FavoritesProvider } from '@/contexts/FavoritesContext';
 import { SessionProvider } from 'next-auth/react';
+import VisitorTracker from './admin/VisitorTracker/page';
+import { NotificationProvider } from '@/contexts/NotificationContext ';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,6 +25,7 @@ export default function RootLayout({
     const isAdminPage = pathname ? pathname.startsWith('/admin') : true
 
   return (
+    <NotificationProvider>
     <SessionProvider>
       <AuthProvider>
         <html lang="en">
@@ -36,7 +39,7 @@ export default function RootLayout({
               <CartProvider>     
                 <FavoritesProvider>
                   {children}
-                  {/* {!isHomePage && !isAdminPage && <ShoppingCard />} */}
+                  <VisitorTracker /> {/* Move VisitorTracker here */}
                 </FavoritesProvider>
               </CartProvider>
             </ThemeProvider>
@@ -44,5 +47,6 @@ export default function RootLayout({
         </html>
       </AuthProvider>
     </SessionProvider>
+    </NotificationProvider>
   )
 }

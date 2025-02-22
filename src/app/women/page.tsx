@@ -1,5 +1,4 @@
-
-'use client';
+'use client'
 
 import { ProductCard } from '../../components/ProductCard';
 import ProductFilters from '../../components/ProductFilters';
@@ -28,6 +27,8 @@ interface Product {
   category: string;
   size: string;
   sizes: { size: string }[];
+  image: string;
+  gender: string;
 }
 
 interface FilterState {
@@ -40,26 +41,65 @@ export default function WomenPage() {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<string[]>([]);
+  const [sizes, setSizes] = useState<string[]>([]); // Define sizes state
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [productsPerPage] = useState(12); // Adjust this number as needed
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
   const fetchProducts = async () => {
     try {
-      const response = await fetch('/api/products?gender=women');
+      const response = await fetch('/api/products?gender=women&is_deleted=false');
       if (!response.ok) throw new Error('Ürünler yüklenirken bir hata oluştu.');
 
       const data = await response.json();
       setProducts(data);
       setFilteredProducts(data); // Başlangıçta tüm ürünleri göster
     } catch (error) {
-      setError(error.message);
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Bilinmeyen bir hata oluştu.');
+      }
     }
   };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch('/api/categories?gender=women&is_deleted=false');
+      if (!response.ok) throw new Error('Kategoriler yüklenirken bir hata oluştu.');
+
+      const data = await response.json();
+      setCategories(data.map(category => category.name));
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError('Bilinmeyen bir hata oluştu.');
+      }
+    }
+  };
+
+  const fetchSizes = async () => {
+    try {
+        const response = await fetch('/api/products/sizes?gender=women');
+        if (!response.ok) throw new Error('Bedenler yüklenirken bir hata oluştu.');
+
+        const data = await response.json();
+        setSizes(data); // Set sizes state
+    } catch (error) {
+        if (error instanceof Error) {
+            setError(error.message);
+        } else {
+            setError('Bilinmeyen bir hata oluştu.');
+        }
+    }
+};
+
+  useEffect(() => {
+    fetchProducts();
+    fetchCategories();
+    fetchSizes();
+  }, []);
 
   const handleFilterChange = useCallback(
     (filters: FilterState) => {
@@ -72,7 +112,7 @@ export default function WomenPage() {
           product.sizes.some((sizeObj) => filters.selectedSizes.includes(sizeObj.size)); // sizes içindeki eşleşmeyi kontrol et
 
         const priceMatch =
-          product.price >= filters.priceRange[0] && product.price <= filters.priceRange[1];
+          Number(product.price) >= filters.priceRange[0] && Number(product.price) <= filters.priceRange[1];
 
         return categoryMatch && sizeMatch && priceMatch;
       });
@@ -99,11 +139,11 @@ export default function WomenPage() {
         {error && <div className="text-red-500 mb-4">{error}</div>}
         <div className="flex flex-col md:flex-row gap-8">
           <div className="md:w-1/4">
-            <ProductFilters gender="women" onFilterChange={handleFilterChange} />
+            <ProductFilters gender="women" onFilterChange={handleFilterChange} sizes={sizes} />
           </div>
           <div className="md:w-3/4">
             {currentProducts.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
                 {currentProducts.map((product) => (
                   <ProductCard key={product.id} product={product} />
                 ))}
@@ -146,6 +186,4 @@ export default function WomenPage() {
       </div>
     </div>
   );
-  
-  
 }

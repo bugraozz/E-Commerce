@@ -1,12 +1,17 @@
 
 
 
-
 'use client'
 
 import React from 'react'
 import Link from 'next/link'
 import { User } from 'lucide-react'
+
+interface AppUser {
+  name: string;
+  email: string;
+  role: string;
+}
 import { useAuth } from '@/contexts/AuthContext'
 import { Button } from "@/components/ui/button"
 import {
@@ -19,7 +24,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 export function UserMenu() {
-  const { user, logout } = useAuth()
+  const { user, logout } = useAuth() as { user: AppUser | null, logout: () => void }
 
   return (
     <DropdownMenu>
@@ -42,8 +47,13 @@ export function UserMenu() {
               <Link href="/user">Profil</Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/orders">Siparişlerim</Link>
-            </DropdownMenuItem>
+               <Link href="/orders">Siparişlerim</Link>
+             </DropdownMenuItem>
+            {user.role === 'admin' && (
+              <DropdownMenuItem asChild>
+                <Link href="/admin" className="text-red-500">Admin Paneli</Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={logout}>Çıkış Yap</DropdownMenuItem>
           </>
         ) : (

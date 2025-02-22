@@ -1,7 +1,3 @@
-
-
-
-
 import { verifyAuth } from '../../../lib/auth'
 import db from '../../../lib/db'
 
@@ -20,10 +16,12 @@ export default async function handler(req, res) {
       try {
         const result = await db.query(
           `SELECT f.product_id AS id, p.name, p.price, p.category, p.gender,
-           COALESCE(ARRAY_AGG(pi.image_url) FILTER (WHERE pi.image_url IS NOT NULL), ARRAY[]::text[]) AS images
+           COALESCE(ARRAY_AGG(pi.image_url) FILTER (WHERE pi.image_url IS NOT NULL), ARRAY[]::text[]) AS images,
+           json_agg(DISTINCT jsonb_build_object('size', ps.size, 'stock', ps.stock)) AS sizes
            FROM favorites f 
            JOIN "Products" p ON f.product_id = p.id
            LEFT JOIN "ProductImages" pi ON p.id = pi.product_id
+           LEFT JOIN "ProductSizes" ps ON p.id = ps.product_id
            WHERE f.user_id = $1
            GROUP BY f.product_id, p.id, p.name, p.price, p.category, p.gender`,
           [userId]
@@ -34,7 +32,7 @@ export default async function handler(req, res) {
         res.status(500).json({ error: 'Internal server error' })
       }
     } else if (req.method === 'POST') {
-            const { id } = req.body
+      const { id } = req.body
       try {
         const result = await db.query(
           'INSERT INTO favorites (user_id, product_id) VALUES ($1, $2) ON CONFLICT (user_id, product_id) DO NOTHING RETURNING *',

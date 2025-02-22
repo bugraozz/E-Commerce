@@ -1,5 +1,3 @@
-
-
 import db from '../../../lib/db';
 
 export default async function handler(req, res) {
@@ -47,8 +45,6 @@ export default async function handler(req, res) {
         );
       }
 
-      
-
       await db.query('DELETE FROM "ProductSizes" WHERE product_id = $1', [id]);
       for (const size of sizes) {
         await db.query(`
@@ -67,29 +63,33 @@ export default async function handler(req, res) {
       console.error('Error updating product:', error);
       res.status(500).json({ error: 'Database error' });
     }
-  } else if (req.method === 'DELETE') {
+  } else if (req.method === "DELETE") {
     try {
-      await db.query('BEGIN');
-      
+      await db.query("BEGIN");
+
+      // Ürün resimlerini ve bedenlerini sil
       await db.query('DELETE FROM "ProductImages" WHERE product_id = $1', [id]);
       await db.query('DELETE FROM "ProductSizes" WHERE product_id = $1', [id]);
+      
+      // order_items tablosundaki ilgili kayıtları sil
+      await db.query('DELETE FROM "order_items" WHERE product_id = $1', [id]);
+
       const result = await db.query('DELETE FROM "Products" WHERE id = $1 RETURNING *', [id]);
 
-      await db.query('COMMIT');
+      await db.query("COMMIT");
 
       if (result.rowCount === 0) {
-        return res.status(404).json({ error: 'Ürün bulunamadı' });
+        res.status(404).json({ error: "Product not found" });
+      } else {
+        res.status(200).json({ message: "Product deleted successfully", product: result.rows[0] });
       }
-
-      res.status(200).json({ message: 'Ürün başarıyla silindi' });
     } catch (error) {
-      await db.query('ROLLBACK');
-      console.error('Ürün silinirken hata oluştu:', error);
-      res.status(500).json({ error: 'Veritabanı hatası', details: error.message });
+      await db.query("ROLLBACK");
+      console.error("Error deleting product:", error);
+      res.status(500).json({ message: "Error deleting product", error: error.message });
     }
   } else {
     res.setHeader('Allow', ['GET', 'PUT', 'DELETE']);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
-

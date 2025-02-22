@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 import { useAuth } from '@/contexts/AuthContext'
 import { toast } from 'react-hot-toast'
 
+
 type PaymentFormData = {
     Username: string
   email: string
@@ -123,6 +124,7 @@ export default function PaymentPage() {
         </Card>
       </div>
     )
+    
   }
 
   if (paymentStatus === 'error') {

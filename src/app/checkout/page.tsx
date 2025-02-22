@@ -8,6 +8,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from 'react-hot-toast'
 import { useAuth } from '@/contexts/AuthContext'
+import Link from 'next/link'
 
 const getImageSrc = (image: string | undefined) => {
   if (!image) return '/placeholder.jpg'
@@ -91,13 +92,15 @@ export default function CheckoutPage() {
               {items.map((item) => (
                 <div key={`${item.id}-${item.size}`} className="flex items-center justify-between mb-4 border-b pb-4">
                   <div className="flex items-center">
-                    <Image 
-                      src={getImageSrc(item.image) || "/placeholder.svg"}
-                      alt={item.name}
-                      width={80}
-                      height={80}
-                      className="rounded-md mr-4"
-                    />
+                    <Link href={`/products/${item.id}`}>
+                      <Image 
+                        src={getImageSrc(item.image) || "/placeholder.svg"}
+                        alt={item.name}
+                        width={80}
+                        height={80}
+                        className="rounded-md mr-4 cursor-pointer"
+                      />
+                    </Link>
                     <div>
                       <h3 className="font-semibold">{item.name}</h3>
                       <p>Beden: {item.size}</p>
@@ -106,7 +109,7 @@ export default function CheckoutPage() {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{parseFloat(item.price).toFixed(2)}TL</p>
-                    <p>Toplam: {(parseFloat(item.price) * item.quantity).toFixed(2)}TL</p>
+                    
                   </div>
                 </div>
               ))}

@@ -10,9 +10,20 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@/contexts/AuthContext';
 import { ProductCard } from '@/components/ProductCard';
 
+
+
+interface Product {
+  id: number
+  name: string
+  price: number | string
+  category: string
+  gender: string
+  images: string[]
+}
+
 export default function FeaturedProducts() {
   const { addItem } = useCart();
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [error, setError] = useState(null);
   const router = useRouter();
 
@@ -48,9 +59,15 @@ export default function FeaturedProducts() {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Öne Çıkan Ürünler</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {products.map(product => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+        {products.map((product: Product) => (
+                    <ProductCard
+                      key={product.id}
+                      product={{
+                        ...product,
+                        image: getImageSrc(product.images)
+                      }}
+                    />
+                  ))}
       </div>
     </div>
   );

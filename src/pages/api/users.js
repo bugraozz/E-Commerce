@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         const isPasswordValid = await bcrypt.compare(Password, user.Password);
 
         if (isPasswordValid) {
-          const { Password, ...userWithoutPassword } = user;
+          const {  ...userWithoutPassword } = user;
           const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
           return res.status(200).json({ message: 'Login successful', user: { ...userWithoutPassword, token } });
@@ -55,7 +55,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      jwt.verify(token, process.env.JWT_SECRET);
 
       if (!id || !role) {
         return res.status(400).json({ error: 'Eksik veri: id ve role gerekli!' });
@@ -76,7 +76,7 @@ export default async function handler(req, res) {
         console.error('Database error:', error);
         res.status(500).json({ error: 'Internal server error' });
       }
-    } catch (error) {
+    } catch {
       return res.status(401).json({ error: 'Unauthorized' });
     }
   } else if (req.method === 'DELETE') {
@@ -88,7 +88,7 @@ export default async function handler(req, res) {
     }
 
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      jwt.verify(token, process.env.JWT_SECRET);
 
       if (!id) {
         return res.status(400).json({ error: 'Eksik veri: id gerekli!' });

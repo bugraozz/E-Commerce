@@ -3,26 +3,25 @@ import bcrypt from 'bcrypt'
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { Username, email, Password } = req.body
+    const { Username, email, Password, phone } = req.body
 
-    // Check if all required fields are present
-    if (!Username || !email || !Password) {
+    if (!Username || !email || !Password || !phone) {
       return res.status(400).json({ message: 'All fields are required' })
     }
 
     try {
-      const existingUser = await db.query('SELECT * FROM "Users" WHERE "Username" = $1 OR email = $2', [Username, email])
+      const existingUser = await db.query('SELECT * FROM "Users" WHERE "Username" = $1 OR email = $2 OR phone = $3', [Username, email, phone])
 
       if (existingUser.rows.length > 0) {
-        return res.status(400).json({ message: 'Username or email already exists' })
+        return res.status(400).json({ message: 'Username, email, or phone number already exists' })
       }
 
       const saltRounds = 10
       const hashedPassword = await bcrypt.hash(Password, saltRounds)
 
       const result = await db.query(
-        'INSERT INTO "Users" ("Username", email, "Password", role) VALUES ($1, $2, $3, $4) RETURNING id, "Username", email, role',
-        [Username, email, hashedPassword, 'user'] 
+        'INSERT INTO "Users" ("Username", email, "Password", phone, role) VALUES ($1, $2, $3, $4, $5) RETURNING id, "Username", email, phone, role',
+        [Username, email, hashedPassword, phone, 'user'] 
       )
 
       res.status(201).json(result.rows[0])
